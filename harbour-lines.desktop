@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Application-Type=silica-qt5
+Name=Lines
+Name[ru]=Шарики
+Icon=harbour-lines
+Exec=harbour-lines
