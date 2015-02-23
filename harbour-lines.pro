@@ -12,27 +12,29 @@ CONFIG(debug, debug|release) {
 }
 
 SOURCES += \
-    src/main.cpp \
-    src/QuickLinesGame.cpp \
-    src/QuickLinesModel.cpp \
     src/LinesBalls.cpp \
     src/LinesDir.cpp \
     src/LinesPrefs.cpp \
     src/LinesScores.cpp \
     src/LinesSet.cpp \
-    src/LinesState.cpp
+    src/LinesState.cpp \
+    src/main.cpp \
+    src/QuickLinesGame.cpp \
+    src/QuickLinesModel.cpp \
+    src/SystemState.cpp
 
 HEADERS += \
-    src/QuickLines.h \
-    src/QuickLinesGame.h \
-    src/QuickLinesModel.h \
     src/LinesBalls.h \
     src/LinesDebug.h \
     src/LinesScores.h \
     src/LinesSet.h \
     src/LinesState.h \
     src/LinesPrefs.h \
-    src/LinesTypes.h
+    src/LinesTypes.h \
+    src/QuickLines.h \
+    src/QuickLinesGame.h \
+    src/QuickLinesModel.h \
+    src/SystemState.h
 
 OTHER_FILES += \
     harbour-lines.desktop \

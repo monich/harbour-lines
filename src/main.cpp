@@ -32,6 +32,7 @@
 #include "QuickLines.h"
 #include "QuickLinesModel.h"
 #include "QuickLinesGame.h"
+#include "SystemState.h"
 #include "LinesPrefs.h"
 
 #include <QtGui>
@@ -64,6 +65,7 @@ int main(int argc, char *argv[])
     REGISTER(QuickLinesModel, "LinesModel");
     REGISTER(QuickLinesGame, "LinesGame");
     REGISTER(LinesPrefs, "LinesPrefs");
+    REGISTER(SystemState, "SystemState");
 
     QQuickView *view = SailfishApp::createView();
     view->setSource(SailfishApp::pathTo(QString("qml/main.qml")));

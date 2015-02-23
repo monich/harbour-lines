@@ -43,7 +43,6 @@ MouseArea {
     property string _lastColor
     property real _size: 1
     property real _touch: 0
-    property bool _selected: state == "SELECTED"
     readonly property real _animationDuration: 125
 
     function stepDone() {
@@ -98,7 +97,7 @@ MouseArea {
     SequentialAnimation {
         id: jumpAnimation
         loops: Animation.Infinite
-        running: _selected
+        running: state == "SELECTED" && globalSystemState.lockMode != "locked"
         NumberAnimation {
             target: cell
             properties: "_size"
