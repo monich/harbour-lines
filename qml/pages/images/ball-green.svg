@@ -25,17 +25,17 @@
       <stop
          id="stop15842"
          offset="0"
-         style="stop-color:#00ff00;stop-opacity:1;" />
+         style="stop-color:#00eb00;stop-opacity:1;" />
       <stop
-         style="stop-color:#00da00;stop-opacity:1;"
+         style="stop-color:#00c600;stop-opacity:1;"
          offset="0.33000001"
          id="stop15848" />
       <stop
          id="stop15850"
          offset="0.66000003"
-         style="stop-color:#00b400;stop-opacity:1;" />
+         style="stop-color:#00a000;stop-opacity:1;" />
       <stop
-         style="stop-color:#00a500;stop-opacity:1;"
+         style="stop-color:#009100;stop-opacity:1;"
          offset="1"
          id="stop15838" />
     </linearGradient>
