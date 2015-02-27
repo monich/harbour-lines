@@ -68,6 +68,7 @@ MouseArea {
         id: glow
         anchors.fill: parent;
         opacity: _touch
+        visible: opacity > 0
         source: "images/glow.svg"
         sourceSize.width: width
         sourceSize.height: height
@@ -76,6 +77,7 @@ MouseArea {
     Image {
         anchors.horizontalCenter: parent.horizontalCenter
         opacity: (ball.opacity && ball.source) ? 1 : 0
+        visible: opacity > 0
         source: "images/shadow.svg"
         sourceSize.width: cell.width
         sourceSize.height: cell.height
@@ -86,6 +88,7 @@ MouseArea {
     Image {
         id: ball
         opacity: (color || _lastColor) ? 1 : 0
+        visible: opacity > 0
         anchors.centerIn: parent;
         source: (color || _lastColor) ? "images/ball-" + (color ? color : _lastColor) + ".svg" : ""
         sourceSize.width: cell.width

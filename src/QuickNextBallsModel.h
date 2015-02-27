@@ -29,52 +29,58 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "QuickLines.h"
-#include "QuickLinesModel.h"
+#ifndef QUICK_NEXT_BALLS_MODEL_H
+#define QUICK_NEXT_BALLS_MODEL_H
+
 #include "QuickLinesGame.h"
-#include "QuickNextBallsModel.h"
-#include "SystemState.h"
-#include "LinesPrefs.h"
+#include "QuickLinesColors.h"
+#include <QAbstractListModel>
 
-#include <QtGui>
-#include <QtQuick>
-#include <sailfishapp.h>
-
-Q_IMPORT_PLUGIN(QSvgPlugin)
-QML_DECLARE_TYPE(LinesPrefs)
-
-#define REGISTER(type,name) qmlRegisterType<type>(HARBOUR_PLUGIN,1,0,name);
-
-int main(int argc, char *argv[])
+class QuickNextBallsModel: public QAbstractListModel
 {
-    QGuiApplication* app = SailfishApp::application(argc, argv);
+    Q_OBJECT
+    Q_PROPERTY(QuickLinesGame* game READ game WRITE setGame NOTIFY gameChanged)
+    Q_PROPERTY(int count READ count NOTIFY countChanged)
+    Q_PROPERTY(int stateIndex READ stateIndex NOTIFY stateIndexChanged)
 
-    // Load translations
-    QLocale locale;
-    QTranslator* translator = new QTranslator(app);
-    QString transDir = SailfishApp::pathTo("translations").toLocalFile();
-    QString transFile(HARBOUR_APP);
-    if (translator->load(locale, transFile, "-", transDir) ||
-        translator->load(transFile, transDir)) {
-        app->installTranslator(translator);
-    } else {
-        qWarning() << "Failed to load translator for" << locale;
-        delete translator;
-    }
+    struct State {
+        LinesColor color[LinesNextBalls];
+        int index;
+    };
 
-    REGISTER(QuickLines, "Lines");
-    REGISTER(QuickLinesModel, "LinesModel");
-    REGISTER(QuickLinesGame, "LinesGame");
-    REGISTER(QuickNextBallsModel, "NextBallsModel");
-    REGISTER(LinesPrefs, "LinesPrefs");
-    REGISTER(SystemState, "SystemState");
+public:
+    explicit QuickNextBallsModel(QObject* aParent = NULL);
+    ~QuickNextBallsModel();
 
-    QQuickView *view = SailfishApp::createView();
-    view->setSource(SailfishApp::pathTo(QString("qml/main.qml")));
-    view->show();
+    QuickLinesGame* game() const { return iGame; }
+    void setGame(QuickLinesGame* aGame);
 
-    int result = app->exec();
-    delete view;
-    delete app;
-    return result;
-}
+    int count() const { return LinesNextBalls; }
+    int stateIndex() const { return iState.index; }
+
+    virtual QHash<int,QByteArray> roleNames() const;
+    virtual int rowCount(const QModelIndex& aParent) const;
+    virtual QVariant data(const QModelIndex& aIndex, int aRole) const;
+
+private:
+    void updateState();
+    void emitStateChangeSignals(const State* aPrevState);
+    void emitDataChanged(int firstRow, int lastRow);
+
+private Q_SLOTS:
+    void onStateChanged(LinesState* aPrev, LinesState* aCurrent);
+
+Q_SIGNALS:
+    void gameChanged();
+    void countChanged();
+    void stateIndexChanged();
+
+private:
+    QuickLinesGame* iGame;
+    QuickLinesColors iColors;
+    State iState;
+};
+
+QML_DECLARE_TYPE(QuickNextBallsModel)
+
+#endif // QUICK_NEXT_BALLS_MODEL_H

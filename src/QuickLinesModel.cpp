@@ -47,13 +47,6 @@ QuickLinesModel::QuickLinesModel(QObject* aParent) :
     iGame(NULL)
 {
     QDEBUG("created");
-    iColors[LColorRed] = "red";
-    iColors[LColorGreen] = "green";
-    iColors[LColorYellow] = "yellow";
-    iColors[LColorBlue] = "blue";
-    iColors[LColorMagenta] = "magenta";
-    iColors[LColorBrown] = "brown";
-    iColors[LColorCyan] = "cyan";
 }
 
 QuickLinesModel::~QuickLinesModel()
@@ -168,21 +161,12 @@ LinesPoint QuickLinesModel::pointFromIndex(QModelIndex aIndex)
     return LinesPoint(row % LinesGridSize, row / LinesGridSize);
 }
 
-QString QuickLinesModel::colorName(LinesColor aColor) const
-{
-    if (aColor > LColorNone && aColor < LColorCount) {
-        return iColors[aColor];
-    } else {
-        return QString();
-    }
-}
-
 QString QuickLinesModel::colorAt(LinesPoint aPoint) const
 {
     if (iGame) {
         const LinesState* state = iGame->state();
         if (state) {
-            return colorName(state->colorAt(aPoint));
+            return iColors.colorName(state->colorAt(aPoint));
         }
     }
     return QString();

@@ -33,6 +33,7 @@
 #define QUICK_LINES_MODEL_H
 
 #include "QuickLinesGame.h"
+#include "QuickLinesColors.h"
 #include <QAbstractListModel>
 
 class QuickLinesModel: public QAbstractListModel
@@ -64,7 +65,6 @@ Q_SIGNALS:
 private:
     static LinesPoint pointFromIndex(QModelIndex aIndex);
     QModelIndex indexFromPoint(LinesPoint aPoint) const;
-    QString colorName(LinesColor aColor) const;
     QString colorAt(LinesPoint aPoint) const;
     LinesPoint selection() const;
 
@@ -72,7 +72,7 @@ private:
     LinesPoints iMove;
     int iMoveStep;
     QuickLinesGame* iGame;
-    QString iColors[LColorCount];
+    QuickLinesColors iColors;
 };
 
 QML_DECLARE_TYPE(QuickLinesModel)

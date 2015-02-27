@@ -29,52 +29,43 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "QuickLines.h"
-#include "QuickLinesModel.h"
-#include "QuickLinesGame.h"
-#include "QuickNextBallsModel.h"
-#include "SystemState.h"
-#include "LinesPrefs.h"
+import QtQuick 2.0
+import Sailfish.Silica 1.0
 
-#include <QtGui>
-#include <QtQuick>
-#include <sailfishapp.h>
+MouseArea {
+    id: panel
 
-Q_IMPORT_PLUGIN(QSvgPlugin)
-QML_DECLARE_TYPE(LinesPrefs)
+    property var prefs
 
-#define REGISTER(type,name) qmlRegisterType<type>(HARBOUR_PLUGIN,1,0,name);
-
-int main(int argc, char *argv[])
-{
-    QGuiApplication* app = SailfishApp::application(argc, argv);
-
-    // Load translations
-    QLocale locale;
-    QTranslator* translator = new QTranslator(app);
-    QString transDir = SailfishApp::pathTo("translations").toLocalFile();
-    QString transFile(HARBOUR_APP);
-    if (translator->load(locale, transFile, "-", transDir) ||
-        translator->load(transFile, transDir)) {
-        app->installTranslator(translator);
-    } else {
-        qWarning() << "Failed to load translator for" << locale;
-        delete translator;
+    Image {
+        anchors.fill: parent;
+        sourceSize.width: width
+        sourceSize.height: height
+        fillMode: Image.PreserveAspectFit
+        source: "images/settings-bg.svg"
+        height: width
     }
 
-    REGISTER(QuickLines, "Lines");
-    REGISTER(QuickLinesModel, "LinesModel");
-    REGISTER(QuickLinesGame, "LinesGame");
-    REGISTER(QuickNextBallsModel, "NextBallsModel");
-    REGISTER(LinesPrefs, "LinesPrefs");
-    REGISTER(SystemState, "SystemState");
+    Column {
+        width: parent.width - 2*Theme.paddingLarge
+        anchors {
+            top: parent.top
+            topMargin: Theme.paddingLarge
+            horizontalCenter: parent.horizontalCenter
+        }
+        TextSwitch {
+            text: qsTr("settings-show-next-switch")
+            description: qsTr("settings-show-next-description")
+            checked: prefs.showNextBalls
+            onCheckedChanged: prefs.showNextBalls = checked
+        }
+        TextSwitch {
+            text: qsTr("settings-animate-movement-switch")
+            description: qsTr("settings-animate-movement-description")
+            checked: prefs.showBallPath
+            onCheckedChanged: prefs.showBallPath = checked
+        }
+    }
 
-    QQuickView *view = SailfishApp::createView();
-    view->setSource(SailfishApp::pathTo(QString("qml/main.qml")));
-    view->show();
-
-    int result = app->exec();
-    delete view;
-    delete app;
-    return result;
+    onClicked: mouse.accepted = true
 }

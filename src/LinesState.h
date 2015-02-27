@@ -53,7 +53,9 @@ public:
     bool hasBallAt(LinesPoint aPoint) const;
     bool hasSelection() const;
     bool nextColorsShown();
-    const LinesColor* nextColors() const;
+    const LinesColor* nextBallColors() const;
+    int nextBallCount() const;
+    int nextBallsStateIndex() const;
     QJsonObject toJson() const;
     LinesPoints findPath(LinesPoint aFrom, LinesPoint aTo) const;
     LinesPoints diff(const LinesState& aState) const;
@@ -84,6 +86,7 @@ private:
     LinesColor iNextColor[LinesNextBalls];
     LinesColor iGrid[LinesGridSize][LinesGridSize];
     LinesPoint iSelection;
+    int iNextBallsStateIndex;
     bool iHaveSeenNextColors;
     bool iEasyPlay;
     int iScore;
@@ -98,11 +101,13 @@ inline bool LinesState::hasEmptyCells() const
     { return !iAvailable.isEmpty(); }
 inline bool LinesState::hasBallAt(LinesPoint aPoint) const
     { return colorAt(aPoint) != LColorNone; }
+inline int LinesState::nextBallsStateIndex() const
+    { return iNextBallsStateIndex; }
 inline LinesPoint LinesState::selection() const
     { return iSelection.isValid() ? iSelection : LinesPoint(); }
 inline bool LinesState::hasSelection() const
     { return iSelection.isValid(); }
-inline const LinesColor* LinesState::nextColors() const
+inline const LinesColor* LinesState::nextBallColors() const
     { return iNextColor; }
 inline void LinesState::unselect()
     { iSelection.invalidate(); }

@@ -29,52 +29,23 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "QuickLines.h"
-#include "QuickLinesModel.h"
-#include "QuickLinesGame.h"
-#include "QuickNextBallsModel.h"
-#include "SystemState.h"
-#include "LinesPrefs.h"
+#ifndef QUICK_LINES_COLORS_H
+#define QUICK_LINES_COLORS_H
 
-#include <QtGui>
-#include <QtQuick>
-#include <sailfishapp.h>
+#include "LinesTypes.h"
 
-Q_IMPORT_PLUGIN(QSvgPlugin)
-QML_DECLARE_TYPE(LinesPrefs)
+#include <QString>
 
-#define REGISTER(type,name) qmlRegisterType<type>(HARBOUR_PLUGIN,1,0,name);
-
-int main(int argc, char *argv[])
+class QuickLinesColors
 {
-    QGuiApplication* app = SailfishApp::application(argc, argv);
+public:
+    QuickLinesColors();
+    ~QuickLinesColors();
 
-    // Load translations
-    QLocale locale;
-    QTranslator* translator = new QTranslator(app);
-    QString transDir = SailfishApp::pathTo("translations").toLocalFile();
-    QString transFile(HARBOUR_APP);
-    if (translator->load(locale, transFile, "-", transDir) ||
-        translator->load(transFile, transDir)) {
-        app->installTranslator(translator);
-    } else {
-        qWarning() << "Failed to load translator for" << locale;
-        delete translator;
-    }
+    QString colorName(LinesColor aColor) const;
 
-    REGISTER(QuickLines, "Lines");
-    REGISTER(QuickLinesModel, "LinesModel");
-    REGISTER(QuickLinesGame, "LinesGame");
-    REGISTER(QuickNextBallsModel, "NextBallsModel");
-    REGISTER(LinesPrefs, "LinesPrefs");
-    REGISTER(SystemState, "SystemState");
+private:
+    QString iColors[LColorCount];
+};
 
-    QQuickView *view = SailfishApp::createView();
-    view->setSource(SailfishApp::pathTo(QString("qml/main.qml")));
-    view->show();
-
-    int result = app->exec();
-    delete view;
-    delete app;
-    return result;
-}
+#endif // QUICK_LINES_COLORS_H

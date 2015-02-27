@@ -29,52 +29,37 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "QuickLines.h"
-#include "QuickLinesModel.h"
-#include "QuickLinesGame.h"
-#include "QuickNextBallsModel.h"
-#include "SystemState.h"
-#include "LinesPrefs.h"
+import QtQuick 2.0
+import Sailfish.Silica 1.0
 
-#include <QtGui>
-#include <QtQuick>
-#include <sailfishapp.h>
+MouseArea {
+    id: button
+    property bool ok
 
-Q_IMPORT_PLUGIN(QSvgPlugin)
-QML_DECLARE_TYPE(LinesPrefs)
+    signal buttonClicked()
 
-#define REGISTER(type,name) qmlRegisterType<type>(HARBOUR_PLUGIN,1,0,name);
-
-int main(int argc, char *argv[])
-{
-    QGuiApplication* app = SailfishApp::application(argc, argv);
-
-    // Load translations
-    QLocale locale;
-    QTranslator* translator = new QTranslator(app);
-    QString transDir = SailfishApp::pathTo("translations").toLocalFile();
-    QString transFile(HARBOUR_APP);
-    if (translator->load(locale, transFile, "-", transDir) ||
-        translator->load(transFile, transDir)) {
-        app->installTranslator(translator);
-    } else {
-        qWarning() << "Failed to load translator for" << locale;
-        delete translator;
+    Image {
+        anchors.fill: parent;
+        source: "images/settings-normal.svg"
+        sourceSize.width: width
+        sourceSize.height: height
+        visible: opacity > 0
+        opacity: ok ? 0 : 1
+        Behavior on opacity { FadeAnimation {} }
     }
 
-    REGISTER(QuickLines, "Lines");
-    REGISTER(QuickLinesModel, "LinesModel");
-    REGISTER(QuickLinesGame, "LinesGame");
-    REGISTER(QuickNextBallsModel, "NextBallsModel");
-    REGISTER(LinesPrefs, "LinesPrefs");
-    REGISTER(SystemState, "SystemState");
+    Image {
+        anchors.fill: parent;
+        source: "images/settings-ok.svg"
+        sourceSize.width: width
+        sourceSize.height: height
+        visible: opacity > 0
+        opacity: ok ? 1 : 0
+        Behavior on opacity { FadeAnimation {} }
+    }
 
-    QQuickView *view = SailfishApp::createView();
-    view->setSource(SailfishApp::pathTo(QString("qml/main.qml")));
-    view->show();
-
-    int result = app->exec();
-    delete view;
-    delete app;
-    return result;
+    onClicked: {
+        mouse.accepted = true
+        button.buttonClicked()
+    }
 }

@@ -42,13 +42,14 @@ Image {
     height: width
 
     property var game
+    property real cellSize: parent.height/Lines.Rows
 
     GridView {
         id: grid
         interactive: false
         anchors.fill: parent
-        cellHeight: parent.height/Lines.Rows
-        cellWidth: parent.width/Lines.Columns
+        cellHeight: cellSize
+        cellWidth: cellSize
         model: LinesModel { game: board.game }
         delegate: BoardCell {
             width: grid.cellWidth
@@ -66,6 +67,7 @@ Image {
         anchors.centerIn: grid
         width: 7*grid.width/9
         height: grid.width/3
+        visible: opacity > 0
         opacity: game.over ? 1 : 0
         text: game.newRecord ? qsTr("message-new-record") : qsTr("message-game-over")
         Behavior on opacity { FadeAnimation {} }

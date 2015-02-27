@@ -229,6 +229,9 @@ void QuickLinesGame::setState(LinesState* aState)
 
         LinesState* prevState = iState;
         iState = aState;
+        if (iState && iPrefs && iPrefs->showNextBalls()) {
+            iState->nextColorsShown();
+        }
         saveState();
         Q_EMIT stateChanged(prevState, iState);
 

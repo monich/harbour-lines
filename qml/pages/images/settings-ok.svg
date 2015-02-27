@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="100"
+   height="100"
+   viewBox="0 0 100 100"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="settings-ok.svg"
+   style="fill:#000000">
+  <path
+     d="M 30.46875,63.4625 18.75,51.92187 30.46875,40.38437 42.753125,52.48125 73.4375,25 81.25,32.69375 42.1875,75 34.375,67.30937 30.46875,63.4625 z M 0,50 c 0,27.61563 22.384375,50 50,50 27.6125,0 50,-22.38437 50,-50 C 100,22.3875 77.6125,0 50,0 22.384375,0 0,22.3875 0,50 z"
+     id="path4"
+     inkscape:connector-curvature="0"
+     style="fill:#ffffff;fill-opacity:0.50196081" />
+</svg>

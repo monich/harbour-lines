@@ -31,32 +31,44 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import harbour.lines 1.0
 
 Page {
     id: page
     allowedOrientations: window.allowedOrientations
     property var game
 
+    property bool _settingsMode
     property bool _portrait: page.orientation === Orientation.Portrait
     property string _highScore: (game && game.highScore) ? game.highScore : ""
     property bool _firstScore: true
     property int _displayedScore: 0
-    property int score: game ? game.score : 0
+    property int _score: game ? game.score : 0
+    property real cellSize: _portrait ?
+        Math.min((width - 2*Theme.paddingLarge)/Lines.Columns,
+                 (height - 4*Theme.paddingLarge)/(Lines.Rows+2)) :
+        Math.min((height - 2*Theme.paddingLarge)/Lines.Rows,
+                 (width - 4*Theme.paddingLarge)/(Lines.Columns+2))
 
-    onScoreChanged: {
+    on_ScoreChanged: {
         if (_firstScore) {
             _firstScore = false
-            _displayedScore = score
-        } else if (_displayedScore > score) {
-            _displayedScore = score
+            _displayedScore = _score
+        } else if (_displayedScore > _score) {
+            _displayedScore = _score
         }
     }
 
     Timer {
-        running: _displayedScore < score
+        running: _displayedScore < _score
         interval: 50
         repeat: true
-        onTriggered: if (_displayedScore < score) _displayedScore += 1
+        onTriggered: if (_displayedScore < _score) _displayedScore += 1
+    }
+
+    NextBallsModel {
+        id: nextBallsModel
+        game: page.game
     }
 
     SilicaFlickable {
@@ -71,32 +83,59 @@ Page {
 
         Board {
             id: board
-            x: _portrait ? Theme.paddingLarge : (parent.width - width)/2
-            y: _portrait ? (Theme.paddingLarge + scoreItem.height + (parent.height - height - Theme.paddingLarge - scoreItem.height)/2) : Theme.paddingLarge
-            width: (_portrait ? page.width : parent.height) - 2*Theme.paddingLarge
-            height: width
+            anchors.centerIn: parent
+            cellSize: page.cellSize
+            width: cellSize * Lines.Columns
+            height: cellSize * Lines.Rows
             game: page.game
+            opacity: _settingsMode ? 0 : 1
+            visible: opacity > 0
+            Behavior on opacity { FadeAnimation {} }
+        }
+
+        GridView {
+            id: nextBalls
+            width: cellSize * (_portrait ? nextBallsModel.count : 1)
+            height: cellSize * (_portrait ? 1 : nextBallsModel.count)
+            anchors {
+                leftMargin: _portrait ? 0 : Theme.paddingLarge
+                bottomMargin: _portrait ? Theme.paddingLarge : 0
+            }
+            opacity: game && game.prefs && game.prefs.showNextBalls ? 1 : 0
+            cellWidth: cellSize
+            cellHeight: cellSize
+            model: nextBallsModel
+            delegate: NextBall {
+                width: cellSize
+                height: cellSize
+                color: model.color
+                stateIndex: nextBallsModel.stateIndex
+            }
+            visible: opacity > 0
+            Behavior on opacity { FadeAnimation {} }
         }
 
         Score {
             id: scoreItem
             text: _displayedScore
+            horizontalAlignment: Text.AlignLeft
             anchors {
                 bottomMargin: Theme.paddingLarge
                 rightMargin: Theme.paddingLarge
+                leftMargin: _portrait ? 0 : Theme.paddingLarge
             }
-            horizontalAlignment: _portrait ? Text.AlignLeft : Text.AlignRight
         }
 
         Score {
             id: highScoreItem
             text: _highScore
             opacity: 0.5
+            horizontalAlignment: Text.AlignRight
             anchors {
-                leftMargin: Theme.paddingLarge
                 bottomMargin: Theme.paddingLarge
+                leftMargin: Theme.paddingLarge
+                rightMargin: _portrait ? 0 : Theme.paddingLarge
             }
-            horizontalAlignment: _portrait ? Text.AlignRight : Text.AlignLeft
         }
 
         PulleyAnimationHint {
@@ -105,23 +144,57 @@ Page {
             enabled: game.over
         }
 
+        SettingsPanel {
+            prefs: game.prefs
+            x: board.x
+            y: board.y
+            width: board.width
+            height: board.height
+            visible: opacity > 0
+            opacity: _settingsMode ? 1 : 0
+            Behavior on opacity { FadeAnimation {} }
+        }
+
+        SettingsButton {
+            width: cellSize
+            height: width
+            ok: _settingsMode
+            anchors {
+                bottom: parent.bottom
+                right: parent.right
+                margins: Theme.paddingLarge
+            }
+            onButtonClicked: _settingsMode = !_settingsMode
+        }
+
         states: [
             State {
                 name: "PORTRAIT"
                 when:  _portrait
                 AnchorChanges {
                     target: scoreItem
-                    anchors.left: board.left
-                    anchors.bottom: board.top
-                    anchors.top: undefined
-                    anchors.right: undefined
+                    anchors {
+                        top: undefined
+                        left: board.left
+                        bottom: board.top
+                        right: undefined
+                    }
                 }
                 AnchorChanges {
                     target: highScoreItem
-                    anchors.right: board.right
-                    anchors.bottom: board.top
-                    anchors.top: undefined
-                    anchors.left: undefined
+                    anchors {
+                        top: undefined
+                        left: undefined
+                        bottom: board.top
+                        right: board.right
+                    }
+                }
+                AnchorChanges {
+                    target: nextBalls
+                    anchors {
+                        left: board.left
+                        bottom: parent.bottom
+                    }
                 }
             },
             State {
@@ -129,17 +202,28 @@ Page {
                 when: !_portrait
                 AnchorChanges {
                     target: scoreItem
-                    anchors.left: undefined
-                    anchors.bottom: undefined
-                    anchors.top: board.top
-                    anchors.right: board.left
+                    anchors {
+                        top: board.top
+                        left: parent.left
+                        bottom: undefined
+                        right: board.left
+                    }
                 }
                 AnchorChanges {
                     target: highScoreItem
-                    anchors.right: undefined
-                    anchors.bottom: undefined
-                    anchors.top: board.top
-                    anchors.left: board.right
+                    anchors {
+                        top: board.top
+                        left: board.right
+                        right: parent.right
+                        bottom: undefined
+                    }
+                }
+                AnchorChanges {
+                    target: nextBalls
+                    anchors {
+                        left: parent.left
+                        bottom: board.bottom
+                    }
                 }
             }
         ]

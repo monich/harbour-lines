@@ -19,8 +19,10 @@ SOURCES += \
     src/LinesSet.cpp \
     src/LinesState.cpp \
     src/main.cpp \
+    src/QuickLinesColors.cpp \
     src/QuickLinesGame.cpp \
     src/QuickLinesModel.cpp \
+    src/QuickNextBallsModel.cpp \
     src/SystemState.cpp
 
 HEADERS += \
@@ -32,8 +34,10 @@ HEADERS += \
     src/LinesPrefs.h \
     src/LinesTypes.h \
     src/QuickLines.h \
+    src/QuickLinesColors.h \
     src/QuickLinesGame.h \
     src/QuickLinesModel.h \
+    src/QuickNextBallsModel.h \
     src/SystemState.h
 
 OTHER_FILES += \

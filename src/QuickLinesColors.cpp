@@ -29,52 +29,25 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "QuickLines.h"
-#include "QuickLinesModel.h"
-#include "QuickLinesGame.h"
-#include "QuickNextBallsModel.h"
-#include "SystemState.h"
-#include "LinesPrefs.h"
+#include "QuickLinesColors.h"
 
-#include <QtGui>
-#include <QtQuick>
-#include <sailfishapp.h>
-
-Q_IMPORT_PLUGIN(QSvgPlugin)
-QML_DECLARE_TYPE(LinesPrefs)
-
-#define REGISTER(type,name) qmlRegisterType<type>(HARBOUR_PLUGIN,1,0,name);
-
-int main(int argc, char *argv[])
+QuickLinesColors::QuickLinesColors()
 {
-    QGuiApplication* app = SailfishApp::application(argc, argv);
+    iColors[LColorRed] = "red";
+    iColors[LColorGreen] = "green";
+    iColors[LColorYellow] = "yellow";
+    iColors[LColorBlue] = "blue";
+    iColors[LColorMagenta] = "magenta";
+    iColors[LColorBrown] = "brown";
+    iColors[LColorCyan] = "cyan";
+}
 
-    // Load translations
-    QLocale locale;
-    QTranslator* translator = new QTranslator(app);
-    QString transDir = SailfishApp::pathTo("translations").toLocalFile();
-    QString transFile(HARBOUR_APP);
-    if (translator->load(locale, transFile, "-", transDir) ||
-        translator->load(transFile, transDir)) {
-        app->installTranslator(translator);
-    } else {
-        qWarning() << "Failed to load translator for" << locale;
-        delete translator;
-    }
+QuickLinesColors::~QuickLinesColors()
+{
+}
 
-    REGISTER(QuickLines, "Lines");
-    REGISTER(QuickLinesModel, "LinesModel");
-    REGISTER(QuickLinesGame, "LinesGame");
-    REGISTER(QuickNextBallsModel, "NextBallsModel");
-    REGISTER(LinesPrefs, "LinesPrefs");
-    REGISTER(SystemState, "SystemState");
-
-    QQuickView *view = SailfishApp::createView();
-    view->setSource(SailfishApp::pathTo(QString("qml/main.qml")));
-    view->show();
-
-    int result = app->exec();
-    delete view;
-    delete app;
-    return result;
+QString QuickLinesColors::colorName(LinesColor aColor) const
+{
+    return (aColor > LColorNone && aColor < LColorCount) ?
+        iColors[aColor] : QString();
 }

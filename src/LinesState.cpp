@@ -106,7 +106,9 @@ bool LinesState::PathSearch::step(LinesPoint aTo)
     return stepsMade > 0;
 }
 
-LinesState::LinesState(const QJsonObject* aJson)
+LinesState::LinesState(const QJsonObject* aJson) :
+    iNextBallsStateIndex(0),
+    iEasyPlay(false)
 {
     QVariantMap map;
     if (aJson) {
@@ -205,8 +207,6 @@ LinesState::LinesState(const QJsonObject* aJson)
         iHaveSeenNextColors = false;
     }
 
-    iEasyPlay = false;
-
     if (isEmpty()) {
         dropNextBalls();
     }
@@ -216,13 +216,14 @@ LinesState::LinesState(const LinesState& aState) :
     iAvailable(aState.iAvailable),
     iRandom(aState.iRandom),
     iSelection(aState.iSelection),
-    iHaveSeenNextColors(aState.iHaveSeenNextColors),
+    iNextBallsStateIndex(aState.iNextBallsStateIndex),
+    iHaveSeenNextColors(false),
     iEasyPlay(aState.iEasyPlay),
     iScore(aState.iScore),
     iSubsequentLines(aState.iSubsequentLines)
 {
     memcpy(iGrid, aState.iGrid, sizeof(iGrid));
-    generateNextColors();
+    memcpy(iNextColor, aState.iNextColor, sizeof(iNextColor));
 }
 
 QByteArray LinesState::byteArray(const QJsonObject& aJson, QString aKey)
@@ -270,6 +271,7 @@ QJsonObject LinesState::toJson() const
 bool LinesState::nextColorsShown()
 {
     if (!iHaveSeenNextColors) {
+        QDEBUG("cheating!");
         iHaveSeenNextColors = true;
         return true;
     }
@@ -352,8 +354,15 @@ bool LinesState::select(LinesPoint aPoint)
     }
 }
 
+int LinesState::nextBallCount() const
+{
+    const int available = iAvailable.size();
+    return (available > LinesNextBalls) ? LinesNextBalls : available;
+}
+
 void LinesState::generateNextColors()
 {
+    iNextBallsStateIndex++;
     for (int i=0; i<LinesNextBalls; i++) {
         iNextColor[i] = iRandom.nextColor();
         QDEBUG("next color" << iNextColor[i]);
