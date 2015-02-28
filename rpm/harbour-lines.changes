@@ -1,2 +1,7 @@
+* Sat Feb 28 2015 Slava Monich <slava.monich@jolla.com> 1.0.1
+- Tweaked colors, particularly yellow/green and red/brown
+- Stop jump animation when the screen is locked
+- Added game options: next balls, ball move animation
+
 * Sat Feb 21 2015 Slava Monich <slava.monich@jolla.com> 1.0.0
 - Initial version
