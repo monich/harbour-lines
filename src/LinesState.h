@@ -35,14 +35,14 @@
 #include "LinesTypes.h"
 #include "LinesSet.h"
 
-class QJsonObject;
+#include <QVariantMap>
 
 class LinesState
 {
     class PathSearch;
 
 public:
-    explicit LinesState(const QJsonObject* aJson);
+    explicit LinesState(const QVariantMap* aMap);
     explicit LinesState(const LinesState& aState);
 
     LinesColor colorAt(LinesPoint aPoint) const;
@@ -56,7 +56,7 @@ public:
     const LinesColor* nextBallColors() const;
     int nextBallCount() const;
     int nextBallsStateIndex() const;
-    QJsonObject toJson() const;
+    QVariantMap toVariantMap() const;
     LinesPoints findPath(LinesPoint aFrom, LinesPoint aTo) const;
     LinesPoints diff(const LinesState& aState) const;
 
@@ -67,7 +67,7 @@ public:
     int score() const;
 
 private:
-    static QByteArray byteArray(const QJsonObject& aJson, QString aKey);
+    static QByteArray byteArray(const QVariantMap& aMap, QString aKey);
 
 private:
     void generateNextColors();

@@ -37,24 +37,41 @@
 #include "LinesPrefs.h"
 
 #include <QtGui>
+
+#if QT_VERSION >= 0x050000
 #include <QtQuick>
+#else
+#include <QtDeclarative>
+#endif
+
+#ifdef HARMATTAN
+#include "MeegoLines.h"
+#define SailfishApp MeegoApp
+#define QQuickView MeegoView
+#define MAIN_QML "qml/meego/main.qml"
+#else
 #include <sailfishapp.h>
-
+#define loadTranslations(translator,locale,filename,prefix,directory) \
+    ((translator)->load(locale,filename,prefix,directory))
 Q_IMPORT_PLUGIN(QSvgPlugin)
-QML_DECLARE_TYPE(LinesPrefs)
+#define MAIN_QML "qml/sailfish/main.qml"
+#endif
 
-#define REGISTER(type,name) qmlRegisterType<type>(HARBOUR_PLUGIN,1,0,name);
+#define REGISTER(type,name) qmlRegisterType<type>(LINES_PLUGIN,1,0,name)
 
+#ifdef HARMATTAN_BOOSTER
+Q_DECL_EXPORT
+#endif
 int main(int argc, char *argv[])
 {
-    QGuiApplication* app = SailfishApp::application(argc, argv);
+    QCoreApplication* app = SailfishApp::application(argc, argv);
 
     // Load translations
     QLocale locale;
     QTranslator* translator = new QTranslator(app);
     QString transDir = SailfishApp::pathTo("translations").toLocalFile();
-    QString transFile(HARBOUR_APP);
-    if (translator->load(locale, transFile, "-", transDir) ||
+    QString transFile(LINES_APP);
+    if (loadTranslations(translator, locale, transFile, "-", transDir) ||
         translator->load(transFile, transDir)) {
         app->installTranslator(translator);
     } else {
@@ -70,7 +87,7 @@ int main(int argc, char *argv[])
     REGISTER(SystemState, "SystemState");
 
     QQuickView *view = SailfishApp::createView();
-    view->setSource(SailfishApp::pathTo(QString("qml/main.qml")));
+    view->setSource(SailfishApp::pathTo(MAIN_QML));
     view->show();
 
     int result = app->exec();

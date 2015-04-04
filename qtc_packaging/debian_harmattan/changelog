@@ -1,0 +1,13 @@
+meego-lines (1.0.1) unstable; urgency=low
+
+   * Tweaked colors, particularly yellow/green and red/brown
+   * Stop jump animation when the screen is locked
+   * Added game options: next balls, ball move animation
+
+ -- Slava Monich <slava.monich@jolla.com>  Sat, 28 Feb 2015 15:42:42 +0200
+
+meego-lines (1.0.0) unstable; urgency=low
+
+  * Initial version
+
+ -- Slava Monich <slava.monich@jolla.com>  Sat, 21 Feb 2015 14:46:37 +0200

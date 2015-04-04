@@ -1,0 +1,88 @@
+Source: meego-lines
+Section: user/games
+Priority: optional
+Maintainer: Slava Monich <slava.monich@jolla.com>
+Build-Depends: debhelper (>= 5), libqt4-dev
+Standards-Version: 3.7.3
+Homepage: http://github.com/monich/harbour-lines
+
+Package: meego-lines
+Architecture: armel
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description:
+ Classic puzzle game.
+ Three color balls are randomly placed on the game board at every round.
+ You have to select one ball by clicking on it and move it to a different
+ location (click on the target square). Lines of 5 or more balls of the
+ same color are eliminated, adding to the score and giving you additional
+ move before the next three balls appear on the board. The longer the lines
+ are the more points you earn.
+XB-Description-ru_RU:
+ Логическая компьютерная игра.
+ На квадратное поле 9×9 клеток, в случайных местах программа выставляет
+ три шарика разных цветов. Всего 7 возможных цветов. За один ход игрок
+ может передвинуть один шарик, выбрав его и указав его новое местоположение.
+ Для хода необходимо, чтобы между начальной и конечной клетками существовал
+ путь из свободных клеток. Цель игры состоит в удалении максимального
+ количества шариков, которые исчезают при выстраивании шариков одного
+ цвета по пять и более в ряд (по горизонтали, вертикали или диагонали).
+XSBC-Maemo-Display-Name: Lines
+XSBC-Maemo-Display-Name-ru_RU: Шарики
+XB-Maemo-Icon-26:
+ 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
+ AAAAAElFTkSuQmCC

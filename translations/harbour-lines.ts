@@ -18,6 +18,18 @@
         <source>menu-new-game</source>
         <translation>New game</translation>
     </message>
+    <message>
+        <source>new-game-question</source>
+        <translation>Start new game?</translation>
+    </message>
+    <message>
+        <source>new-game-accept</source>
+        <translation>Yes</translation>
+    </message>
+    <message>
+        <source>new-game-reject</source>
+        <translation>No</translation>
+    </message>
 </context>
 <context>
     <name>SettingsPanel</name>

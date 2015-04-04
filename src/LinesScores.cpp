@@ -32,10 +32,7 @@
 #include "LinesScores.h"
 #include "LinesDebug.h"
 
-#include <QVariantMap>
 #include <QVariantList>
-#include <QJsonObject>
-#include <QJsonArray>
 #include <QDateTime>
 
 #define LINES_SCORES_MAX_COUNT (10)
@@ -60,12 +57,12 @@ public:
         iValue(aValue),
         iTimestamp(aTimestamp) {}
 
-    QJsonObject toJson() const {
-        QJsonObject json;
-        json.insert(kJsonScoreValue, iValue);
-        json.insert(kJsonScoreTimestamp,
+    QVariantMap toVariantMap() const {
+        QVariantMap map;
+        map.insert(kJsonScoreValue, iValue);
+        map.insert(kJsonScoreTimestamp,
             iTimestamp.toUTC().toString(Qt::ISODate));
-        return json;
+        return map;
     }
 
 public:
@@ -83,32 +80,28 @@ static bool scoreLessThan(LinesScore* aScore1, LinesScore* aScore2)
 // LinesScores
 //===========================================================================
 
-LinesScores::LinesScores(QJsonObject* aJson)
+LinesScores::LinesScores(QVariantMap* aMap)
 {
-    QVariantMap map;
-    if (aJson) {
-        map = aJson->toVariantMap();
-        QVariant version = map.value(kJsonScoresVersion);
+    if (aMap) {
+        QVariant version = aMap->value(kJsonScoresVersion);
         if (version.toInt() != LINES_SCORES_JSON_VERSION) {
             qWarning() << "Unexpected scores JSON version:" << version;
-            aJson = NULL;
-            map.clear();
+            aMap = NULL;
         }
     }
 
-    QVariantList array = map.value(kJsonScoresArray).toList();
-    int i, n = array.count();
-    for (i=0; i<n; i++) {
-        QVariantMap entry = array.at(i).toMap();
-        int value = entry.value(kJsonScoreValue).toInt();
-        QDateTime timestamp = QDateTime::fromString(
-            entry.value(kJsonScoreTimestamp).toString(), Qt::ISODate);
-        if (value > 0 && timestamp.isValid()) {
-            iScores.append(new LinesScore(value, timestamp.toLocalTime()));
+    if (aMap) {
+        QVariantList array = aMap->value(kJsonScoresArray).toList();
+        int i, n = array.count();
+        for (i=0; i<n; i++) {
+            QVariantMap entry = array.at(i).toMap();
+            int value = entry.value(kJsonScoreValue).toInt();
+            QDateTime timestamp = QDateTime::fromString(
+                entry.value(kJsonScoreTimestamp).toString(), Qt::ISODate);
+            if (value > 0 && timestamp.isValid()) {
+                iScores.append(new LinesScore(value, timestamp.toLocalTime()));
+            }
         }
-    }
-
-    if (aJson) {
         QDEBUG("Loaded" << iScores.count() << "score entries");
         normalize();
     }
@@ -119,18 +112,18 @@ LinesScores::~LinesScores()
     qDeleteAll(iScores);
 }
 
-QJsonObject LinesScores::toJson() const
+QVariantMap LinesScores::toVariantMap() const
 {
-    QJsonArray array;
+    QVariantList array;
     int i, n = iScores.count();
     for (i=0; i<n; i++) {
-        array.append(iScores.at(i)->toJson());
+        array.append(iScores.at(i)->toVariantMap());
     }
 
-    QJsonObject json;
-    json.insert(kJsonScoresVersion, LINES_SCORES_JSON_VERSION);
-    json.insert(kJsonScoresArray, array);
-    return json;
+    QVariantMap map;
+    map.insert(kJsonScoresVersion, LINES_SCORES_JSON_VERSION);
+    map.insert(kJsonScoresArray, array);
+    return map;
 }
 
 int LinesScores::highScore() const

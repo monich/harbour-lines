@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=Lines
+Name[ru]=Шарики
+Icon=/usr/share/icons/hicolor/80x80/apps/meego-lines.png
+Exec=/usr/bin/invoker --type=d -s -S /opt/meego-lines/splash-portrait.png -L /opt/meego-lines/splash-landscape.png /opt/meego-lines/bin/meego-lines

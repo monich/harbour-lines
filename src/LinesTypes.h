@@ -36,17 +36,32 @@
 
 #include <QList>
 #include <QTime>
-#include <QStandardPaths>
 
-#define HARBOUR_APP     "harbour-lines"
-#define HARBOUR_PLUGIN  "harbour.lines"
+#ifdef HARMATTAN
+#  define LINES_APP     "meego-lines"
+#else
+#  define LINES_APP     "harbour-lines"
+#endif
+#define LINES_PLUGIN    "harbour.lines"
+
+#if QT_VERSION >= 0x050000
+#include <QStandardPaths>
+#include <QtQml>
 
 inline QString linesDataDir()
 {
     return QStandardPaths::writableLocation(
          QStandardPaths::GenericDataLocation) +
-         QStringLiteral("/" HARBOUR_APP "/");
+         QStringLiteral("/" LINES_APP "/");
 }
+#else
+#include <QtDeclarative>
+#define QStringLiteral(s) QLatin1String(s)
+inline QString linesDataDir()
+{
+    return QDir::homePath() + QLatin1String("/.config/" LINES_APP "/");
+}
+#endif
 
 typedef enum _LinesColor {
     LColorNone = -1,

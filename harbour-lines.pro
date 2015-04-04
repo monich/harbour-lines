@@ -43,11 +43,11 @@ HEADERS += \
 OTHER_FILES += \
     harbour-lines.desktop \
     harbour-lines.png \
-    qml/main.qml \
-    qml/cover/*.qml \
-    qml/pages/*.qml \
-    qml/pages/images/*.svg \
-    qml/cover/*.svg \
+    qml/common/*.qml \
+    qml/common/images/*.svg \
+    qml/sailfish/*.qml \
+    qml/sailfish/cover/*.qml \
+    qml/sailfish/images/*.svg \
     rpm/harbour-lines.changes \
     rpm/harbour-lines.spec \
     translations/*.ts

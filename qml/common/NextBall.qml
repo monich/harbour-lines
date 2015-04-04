@@ -29,8 +29,8 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import QtQuick 2.0
-import Sailfish.Silica 1.0
+//import QtQuick 1.1  // Harmattan
+import QtQuick 2.0  // Sailfish
 
 Item {
     id: ball
@@ -39,28 +39,22 @@ Item {
 
     property string _displayedColor
     property real _size: 1
-    readonly property real _animationDuration: 125
-
-    on_DisplayedColorChanged: console.log("_displayedColor=" + _displayedColor)
+    property real _animationDuration: 125
 
     onColorChanged: {
         if (_displayedColor) {
             if (color) {
-                console.log("change: " + color)
                 colorChangeAnimation.start()
             } else {
-                console.log("disappear: " + color)
                 disappearAnimation.start()
             }
         } else if (color) {
-            console.log("appear: " + color)
             appearAnimation.start()
         }
     }
 
     onStateIndexChanged: {
         if (_displayedColor) {
-            console.log("changeFrom: " + _displayedColor)
             colorChangeAnimation.start()
         }
     }

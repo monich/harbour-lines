@@ -31,11 +31,12 @@
 
 #include "LinesPrefs.h"
 
-#define DCONF_PATH              "/apps/" HARBOUR_APP "/"
+#define DCONF_PATH              "/apps/" LINES_APP "/"
 #define DCONF_SHOW_BALL_PATH    "showBallPath"
 #define DCONF_SHOW_NEXT_BALLS   "showNextBalls"
 
-LinesPrefs::LinesPrefs() :
+LinesPrefs::LinesPrefs(QObject* aParent) :
+    QObject(aParent),
     iShowBallPath(new MGConfItem(DCONF_PATH DCONF_SHOW_BALL_PATH, this)),
     iShowNextBalls(new MGConfItem(DCONF_PATH DCONF_SHOW_NEXT_BALLS, this))
 {

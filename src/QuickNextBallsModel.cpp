@@ -44,6 +44,9 @@ QuickNextBallsModel::QuickNextBallsModel(QObject* aParent) :
 {
     QDEBUG("created");
     updateState();
+#if QT_VERSION < 0x050000
+    setRoleNames(roleNames());
+#endif
 }
 
 QuickNextBallsModel::~QuickNextBallsModel()

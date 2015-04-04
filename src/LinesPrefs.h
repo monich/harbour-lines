@@ -45,7 +45,7 @@ class LinesPrefs: public QObject
     Q_PROPERTY(bool showNextBalls READ showNextBalls WRITE setShowNextBalls NOTIFY showNextBallsChanged)
 
 public:
-    LinesPrefs();
+    explicit LinesPrefs(QObject* aParent = NULL);
 
     bool showBallPath() const;
     bool showNextBalls() const;
@@ -65,5 +65,7 @@ private:
     MGConfItem* iShowBallPath;
     MGConfItem* iShowNextBalls;
 };
+
+QML_DECLARE_TYPE(LinesPrefs)
 
 #endif // LINES_PREFS_H

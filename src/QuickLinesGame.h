@@ -35,7 +35,6 @@
 #include "LinesPrefs.h"
 #include "LinesState.h"
 #include "LinesScores.h"
-#include <QtQml>
 
 class QuickLinesGame: public QObject
 {

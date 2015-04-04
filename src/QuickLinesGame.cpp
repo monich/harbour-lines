@@ -33,26 +33,43 @@
 #include "LinesDebug.h"
 
 #include <QDir>
-#include <QJsonDocument>
-#include <QJsonObject>
 
 //===========================================================================
-// Utilities
+// JSON serialization
 //===========================================================================
 
-static bool saveJson(QString aPath, const QJsonObject& aJson)
+#if QT_VERSION >= 0x050000
+#  include <QJsonDocument>
+#  include <QJsonObject>
+#else
+#  include <qjson/parser.h>
+#  include <qjson/serializer.h>
+#endif
+
+static bool saveJson(QString aPath, const QVariantMap& aMap)
 {
     QFileInfo file(aPath);
     QDir dir(file.dir());
     if (dir.mkpath(dir.absolutePath())) {
         QFile f(file.absoluteFilePath());
-        if (!aJson.isEmpty()) {
+        if (!aMap.isEmpty()) {
             if (f.open(QIODevice::WriteOnly)) {
-                if (f.write(QJsonDocument(aJson).toJson()) >= 0) {
+#if QT_VERSION >= 0x050000
+                if (f.write(QJsonDocument::fromVariant(aMap).toJson()) >= 0) {
                     return true;
-                } else {
-                    qWarning() << "Error writing" << aPath << f.errorString();
                 }
+#else
+                QJson::Serializer serializer;
+                QByteArray json = serializer.serialize(aMap);
+                if (!json.isNull()) {
+                    if (f.write(json ) >= 0) {
+                        return true;
+                    }
+                } else {
+                    qWarning() << "Json serialization error";
+                }
+#endif
+                qWarning() << "Error writing" << aPath << f.errorString();
             } else {
                 qWarning() << "Error opening" << aPath << f.errorString();
             }
@@ -65,14 +82,28 @@ static bool saveJson(QString aPath, const QJsonObject& aJson)
     return false;
 }
 
-static bool loadJson(QString aPath, QJsonObject& root)
+static bool loadJson(QString aPath, QVariantMap& aRoot)
 {
     QFile f(aPath);
     if (f.exists()) {
         if (f.open(QIODevice::ReadOnly)) {
             QDEBUG("reading" << aPath);
-            root = QJsonDocument::fromJson(f.readAll()).object();
-            return true;
+#if QT_VERSION >= 0x050000
+            QJsonDocument doc(QJsonDocument::fromJson(f.readAll()).object());
+            if (!doc.isEmpty()) {
+                aRoot = doc.toVariant().toMap();
+                return true;
+            }
+#else
+            QJson::Parser parser;
+            QVariant result = parser.parse(&f);
+            if (result.isValid()) {
+                aRoot = result.toMap();
+                return true;
+            } else {
+                qWarning() << "Failed to parse" << qPrintable(aPath);
+            }
+#endif
         } else {
             QDEBUG("can't open" << aPath << f.errorString());
         }
@@ -263,25 +294,25 @@ void QuickLinesGame::setState(LinesState* aState)
 
 void QuickLinesGame::saveState() const
 {
-    QJsonObject json;
-    if (iState) json = iState->toJson();
-    saveJson(defaultStateFile(), json);
+    QVariantMap map;
+    if (iState) map = iState->toVariantMap();
+    saveJson(defaultStateFile(), map);
 }
 
 void QuickLinesGame::saveScores() const
 {
     QDEBUG("saving" << qPrintable(defaultScoresFile()));
-    saveJson(defaultScoresFile(), iScores->toJson());
+    saveJson(defaultScoresFile(), iScores->toVariantMap());
 }
 
 LinesState* QuickLinesGame::loadState()
 {
-    QJsonObject json;
-    return loadJson(defaultStateFile(), json) ? new LinesState(&json) : NULL;
+    QVariantMap map;
+    return loadJson(defaultStateFile(), map) ? new LinesState(&map) : NULL;
 }
 
 LinesScores* QuickLinesGame::loadScores()
 {
-    QJsonObject json;
-    return loadJson(defaultScoresFile(), json) ? new LinesScores(&json) : NULL;
+    QVariantMap map;
+    return loadJson(defaultScoresFile(), map) ? new LinesScores(&map) : NULL;
 }

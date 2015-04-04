@@ -33,17 +33,17 @@
 #define LINES_SCORES_H
 
 #include <QList>
+#include <QVariantMap>
 
-class QJsonObject;
 class LinesScore;
 
 class LinesScores
 {
 public:
-    explicit LinesScores(QJsonObject* aJson);
+    explicit LinesScores(QVariantMap* aMap);
     ~LinesScores();
 
-    QJsonObject toJson() const;
+    QVariantMap toVariantMap() const;
     int highScore() const;
     bool addHighScore(int aScore);
 

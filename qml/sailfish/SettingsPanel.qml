@@ -29,47 +29,42 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef SYSTEM_STATE_H
-#define SYSTEM_STATE_H
+import QtQuick 2.0
+import Sailfish.Silica 1.0
 
-#include "LinesTypes.h"
+MouseArea {
+    id: panel
 
-class QDBusPendingCallWatcher;
+    property var prefs
 
-class SystemState: public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY(QString displayStatus READ displayStatus NOTIFY displayStatusChanged)
-    Q_PROPERTY(QString lockMode READ lockMode NOTIFY lockModeChanged)
+    Image {
+        anchors.fill: parent
+        sourceSize.width: width
+        sourceSize.height: height
+        fillMode: Image.PreserveAspectFit
+        source: "images/settings-bg.svg"
 
-public:
-    explicit SystemState(QObject* aParent = NULL);
-    ~SystemState();
+        Column {
+            width: parent.width - 2*Theme.paddingLarge
+            anchors {
+                top: parent.top
+                topMargin: Theme.paddingLarge
+                horizontalCenter: parent.horizontalCenter
+            }
+            TextSwitch {
+                text: qsTr("settings-show-next-switch")
+                description: qsTr("settings-show-next-description")
+                checked: prefs.showNextBalls
+                onCheckedChanged: prefs.showNextBalls = checked
+            }
+            TextSwitch {
+                text: qsTr("settings-animate-movement-switch")
+                description: qsTr("settings-animate-movement-description")
+                checked: prefs.showBallPath
+                onCheckedChanged: prefs.showBallPath = checked
+            }
+        }
+    }
 
-    QString displayStatus() const { return iDisplayStatus; }
-    QString lockMode() const { return iLockMode; }
-
-private:
-    void setupProperty(QString aQueryMethod, QString aSignal,
-        const char* aQuerySlot, const char* aSignalSlot);
-    void setDisplayStatus(QString aStatus);
-    void setLockMode(QString aStatus);
-
-signals:
-    void displayStatusChanged();
-    void lockModeChanged();
-
-private slots:
-    void onDisplayStatusChanged(QString);
-    void onDisplayStatusQueryDone(QDBusPendingCallWatcher*);
-    void onLockModeChanged(QString);
-    void onLockModeQueryDone(QDBusPendingCallWatcher*);
-
-private:
-    QString iDisplayStatus;
-    QString iLockMode;
-};
-
-QML_DECLARE_TYPE(SystemState)
-
-#endif // SYSTEM_STATE_H
+    onClicked: mouse.accepted = true
+}

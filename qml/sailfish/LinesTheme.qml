@@ -31,19 +31,19 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import harbour.lines 1.0
-import "pages"
-import "cover"
 
-ApplicationWindow {
-    id: window
-    allowedOrientations: Orientation.Portrait | Orientation.Landscape | Orientation.LandscapeInverted
-    initialPage: Component { PlayPage { game: linesGame } }
-    cover: Component { CoverPage { game: linesGame } }
-    SystemState { id: globalSystemState }
-    LinesPrefs { id: linesPrefs }
-    LinesGame {
-        id: linesGame
-        prefs: linesPrefs
-    }
+QtObject {
+    property real fontSizeTiny: Theme.fontSizeTiny
+    property real fontSizeExtraSmall: Theme.fontSizeExtraSmall
+    property real fontSizeSmall: Theme.fontSizeSmall
+    property real fontSizeMedium: Theme.fontSizeMedium
+    property real fontSizeLarge: Theme.fontSizeLarge
+    property real fontSizeExtraLarge: Theme.fontSizeExtraLarge
+    property real fontSizeHuge: Theme.fontSizeHuge
+
+    property real paddingSmall: Theme.paddingSmall
+    property real paddingMedium: Theme.paddingMedium
+    property real paddingLarge: Theme.paddingLarge
+
+    property variant opacityAnimation: Component { FadeAnimation {} }
 }

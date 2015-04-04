@@ -29,47 +29,36 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef SYSTEM_STATE_H
-#define SYSTEM_STATE_H
+#ifndef MEEGO_LINES_H
+#define MEEGO_LINES_H
 
 #include "LinesTypes.h"
 
-class QDBusPendingCallWatcher;
+#include <QUrl>
+#include <QLocale>
+#include <QTranslator>
+#include <QApplication>
+#include <QDeclarativeView>
 
-class SystemState: public QObject
+class MeegoView: public QDeclarativeView
 {
     Q_OBJECT
-    Q_PROPERTY(QString displayStatus READ displayStatus NOTIFY displayStatusChanged)
-    Q_PROPERTY(QString lockMode READ lockMode NOTIFY lockModeChanged)
 
 public:
-    explicit SystemState(QObject* aParent = NULL);
-    ~SystemState();
-
-    QString displayStatus() const { return iDisplayStatus; }
-    QString lockMode() const { return iLockMode; }
-
-private:
-    void setupProperty(QString aQueryMethod, QString aSignal,
-        const char* aQuerySlot, const char* aSignalSlot);
-    void setDisplayStatus(QString aStatus);
-    void setLockMode(QString aStatus);
-
-signals:
-    void displayStatusChanged();
-    void lockModeChanged();
-
-private slots:
-    void onDisplayStatusChanged(QString);
-    void onDisplayStatusQueryDone(QDBusPendingCallWatcher*);
-    void onLockModeChanged(QString);
-    void onLockModeQueryDone(QDBusPendingCallWatcher*);
-
-private:
-    QString iDisplayStatus;
-    QString iLockMode;
+    explicit MeegoView(QWidget* aParent = NULL);
+    void show();
 };
 
-QML_DECLARE_TYPE(SystemState)
+class MeegoApp
+{
+public:
+    static QApplication *application(int &argc, char **argv);
+    static QUrl pathTo(const QString &path);
+    static MeegoView* createView();
+};
 
-#endif // SYSTEM_STATE_H
+bool loadTranslations(QTranslator* aTranslator, QLocale& aLocale,
+    QString aFilename, QString aPrefix, QString aDirectory,
+    QString aSuffix = QString());
+
+#endif // MEEGO_LINES_H

@@ -33,7 +33,6 @@
 #define QUICK_LINES_H
 
 #include "LinesTypes.h"
-#include <QtQml>
 
 // Constants for use by QML
 class QuickLines : public QObject

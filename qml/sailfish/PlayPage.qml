@@ -33,10 +33,13 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import harbour.lines 1.0
 
+import "../common"
+
 Page {
     id: page
     allowedOrientations: window.allowedOrientations
-    property var game
+    property variant game
+    property variant theme
 
     property bool _settingsMode
     property bool _portrait: page.orientation === Orientation.Portrait
@@ -45,10 +48,10 @@ Page {
     property int _displayedScore: 0
     property int _score: game ? game.score : 0
     property real cellSize: _portrait ?
-        Math.min((width - 2*Theme.paddingLarge)/Lines.Columns,
-                 (height - 4*Theme.paddingLarge)/(Lines.Rows+2)) :
-        Math.min((height - 2*Theme.paddingLarge)/Lines.Rows,
-                 (width - 4*Theme.paddingLarge)/(Lines.Columns+2))
+        Math.min((width - 2*theme.paddingLarge)/Lines.Columns,
+                 (height - 4*theme.paddingLarge)/(Lines.Rows+2)) :
+        Math.min((height - 2*theme.paddingLarge)/Lines.Rows,
+                 (width - 4*theme.paddingLarge)/(Lines.Columns+2))
 
     on_ScoreChanged: {
         if (_firstScore) {
@@ -83,6 +86,7 @@ Page {
 
         Board {
             id: board
+            theme: page.theme
             anchors.centerIn: parent
             cellSize: page.cellSize
             width: cellSize * Lines.Columns
@@ -98,8 +102,8 @@ Page {
             width: cellSize * (_portrait ? nextBallsModel.count : 1)
             height: cellSize * (_portrait ? 1 : nextBallsModel.count)
             anchors {
-                leftMargin: _portrait ? 0 : Theme.paddingLarge
-                bottomMargin: _portrait ? Theme.paddingLarge : 0
+                leftMargin: _portrait ? 0 : theme.paddingLarge
+                bottomMargin: _portrait ? theme.paddingLarge : 0
             }
             opacity: game && game.prefs && game.prefs.showNextBalls ? 1 : 0
             cellWidth: cellSize
@@ -120,9 +124,9 @@ Page {
             text: _displayedScore
             horizontalAlignment: Text.AlignLeft
             anchors {
-                bottomMargin: Theme.paddingLarge
-                rightMargin: Theme.paddingLarge
-                leftMargin: _portrait ? 0 : Theme.paddingLarge
+                bottomMargin: theme.paddingLarge
+                rightMargin: theme.paddingLarge
+                leftMargin: _portrait ? 0 : theme.paddingLarge
             }
         }
 
@@ -132,9 +136,9 @@ Page {
             opacity: 0.5
             horizontalAlignment: Text.AlignRight
             anchors {
-                bottomMargin: Theme.paddingLarge
-                leftMargin: Theme.paddingLarge
-                rightMargin: _portrait ? 0 : Theme.paddingLarge
+                bottomMargin: theme.paddingLarge
+                leftMargin: theme.paddingLarge
+                rightMargin: _portrait ? 0 : theme.paddingLarge
             }
         }
 
@@ -156,13 +160,14 @@ Page {
         }
 
         SettingsButton {
+            theme: page.theme
             width: cellSize
             height: width
             ok: _settingsMode
             anchors {
                 bottom: parent.bottom
                 right: parent.right
-                margins: Theme.paddingLarge
+                margins: theme.paddingLarge
             }
             onButtonClicked: _settingsMode = !_settingsMode
         }

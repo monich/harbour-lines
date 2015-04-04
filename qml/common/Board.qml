@@ -29,47 +29,57 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef SYSTEM_STATE_H
-#define SYSTEM_STATE_H
+//import QtQuick 1.1  // Harmattan
+import QtQuick 2.0  // Sailfish
+import harbour.lines 1.0
 
-#include "LinesTypes.h"
+Image {
+    id: board
+    sourceSize.width: width
+    sourceSize.height: height
+    fillMode: Image.PreserveAspectFit
+    source: "images/board.svg"
+    height: width
 
-class QDBusPendingCallWatcher;
+    property variant theme
+    property variant game
+    property real cellSize: height/Lines.Rows
 
-class SystemState: public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY(QString displayStatus READ displayStatus NOTIFY displayStatusChanged)
-    Q_PROPERTY(QString lockMode READ lockMode NOTIFY lockModeChanged)
+    signal gameOverPanelClicked()
 
-public:
-    explicit SystemState(QObject* aParent = NULL);
-    ~SystemState();
+    Component.onCompleted: {
+        gameOverOpacityBehavior.animation = theme.opacityAnimation.createObject(gameOver)
+    }
 
-    QString displayStatus() const { return iDisplayStatus; }
-    QString lockMode() const { return iLockMode; }
+    GridView {
+        id: grid
+        interactive: false
+        anchors.fill: parent
+        cellHeight: cellSize
+        cellWidth: cellSize
+        model: LinesModel { game: board.game }
+        delegate: BoardCell {
+            width: grid.cellWidth
+            height: grid.cellHeight
+            game: board.game
+            row: model.row
+            column: model.column
+            color: model.color
+            state: model.state
+        }
+        focus: true
+    }
 
-private:
-    void setupProperty(QString aQueryMethod, QString aSignal,
-        const char* aQuerySlot, const char* aSignalSlot);
-    void setDisplayStatus(QString aStatus);
-    void setLockMode(QString aStatus);
-
-signals:
-    void displayStatusChanged();
-    void lockModeChanged();
-
-private slots:
-    void onDisplayStatusChanged(QString);
-    void onDisplayStatusQueryDone(QDBusPendingCallWatcher*);
-    void onLockModeChanged(QString);
-    void onLockModeQueryDone(QDBusPendingCallWatcher*);
-
-private:
-    QString iDisplayStatus;
-    QString iLockMode;
-};
-
-QML_DECLARE_TYPE(SystemState)
-
-#endif // SYSTEM_STATE_H
+    GameOver {
+        id: gameOver
+        theme: board.theme
+        anchors.centerIn: grid
+        width: cellSize*7
+        height: cellSize*3
+        visible: opacity > 0
+        opacity: game.over ? 1 : 0
+        text: game.newRecord ? qsTr("message-new-record") : qsTr("message-game-over")
+        Behavior on opacity { id: gameOverOpacityBehavior }
+        onPanelClicked: board.gameOverPanelClicked()
+    }
+}

@@ -29,43 +29,45 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import QtQuick 2.0
-import Sailfish.Silica 1.0
+//import QtQuick 1.1  // Harmattan
+import QtQuick 2.0  // Sailfish
 
 MouseArea {
-    id: panel
+    id: button
+    property bool ok
+    property variant theme
 
-    property var prefs
+    signal buttonClicked()
+
+    Component.onCompleted: {
+        settingsOpacityBehavior.animation = theme.opacityAnimation.createObject(settingsImage)
+        okOpacityBehavior.animation = theme.opacityAnimation.createObject(okImage)
+    }
 
     Image {
-        anchors.fill: parent;
+        id: settingsImage
+        anchors.fill: parent
+        source: "images/settings-normal.svg"
         sourceSize.width: width
         sourceSize.height: height
-        fillMode: Image.PreserveAspectFit
-        source: "images/settings-bg.svg"
-        height: width
+        visible: opacity > 0
+        opacity: ok ? 0 : 1
+        Behavior on opacity { id: settingsOpacityBehavior }
     }
 
-    Column {
-        width: parent.width - 2*Theme.paddingLarge
-        anchors {
-            top: parent.top
-            topMargin: Theme.paddingLarge
-            horizontalCenter: parent.horizontalCenter
-        }
-        TextSwitch {
-            text: qsTr("settings-show-next-switch")
-            description: qsTr("settings-show-next-description")
-            checked: prefs.showNextBalls
-            onCheckedChanged: prefs.showNextBalls = checked
-        }
-        TextSwitch {
-            text: qsTr("settings-animate-movement-switch")
-            description: qsTr("settings-animate-movement-description")
-            checked: prefs.showBallPath
-            onCheckedChanged: prefs.showBallPath = checked
-        }
+    Image {
+        id: okImage
+        anchors.fill: parent;
+        source: "images/settings-ok.svg"
+        sourceSize.width: width
+        sourceSize.height: height
+        visible: opacity > 0
+        opacity: ok ? 1 : 0
+        Behavior on opacity { id: okOpacityBehavior }
     }
 
-    onClicked: mouse.accepted = true
+    onClicked: {
+        mouse.accepted = true
+        button.buttonClicked()
+    }
 }

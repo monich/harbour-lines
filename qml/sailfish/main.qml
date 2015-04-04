@@ -31,45 +31,17 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import harbour.lines 1.0
+import "cover"
 
-Rectangle {
-    color: "#B0000000"
-    property alias text: textComponent.text
-    readonly property int _minimumSize: 8
-    readonly property int _maximumSize: 200
-    Text {
-        id: textComponent
-        anchors{
-            fill: parent
-            margins: Theme.paddingLarge
-        }
-        horizontalAlignment: Text.AlignHCenter;
-        verticalAlignment: Text.AlignVCenter;
-        color: "white"
-        smooth: true
-        font.pixelSize: Theme.fontSizeHuge
-        font.bold: true
-
-        onWidthChanged: refitText()
-        onHeightChanged: refitText()
-        onTextChanged: refitText()
-
-        function refitText() {
-            if (paintedHeight > 0 && paintedWidth > 0) {
-                if (font.pixelSize % 2) font.pixelSize++
-                while (paintedWidth > width || paintedHeight > height) {
-                    if ((font.pixelSize -= 2) <= _minimumSize)
-                        break
-                }
-                while (paintedWidth < width && paintedHeight < height) {
-                    font.pixelSize += 2
-                }
-                font.pixelSize -= 2
-                if (font.pixelSize >= _maximumSize) {
-                    font.pixelSize = _maximumSize
-                    return
-                }
-            }
-        }
+ApplicationWindow {
+    id: window
+    allowedOrientations: Orientation.Portrait | Orientation.Landscape | Orientation.LandscapeInverted
+    initialPage: Component { PlayPage { game: linesGame;  theme: LinesTheme {} } }
+    cover: Component { CoverPage { game: linesGame } }
+    SystemState { id: globalSystemState }
+    LinesGame {
+        id: linesGame
+        prefs: LinesPrefs {}
     }
 }

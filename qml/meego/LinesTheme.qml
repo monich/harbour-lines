@@ -29,47 +29,23 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef SYSTEM_STATE_H
-#define SYSTEM_STATE_H
+import QtQuick 1.1
+import com.nokia.meego 1.0
 
-#include "LinesTypes.h"
+QtObject {
+    property real fontSizeTiny: 20
+    property real fontSizeExtraSmall: 24
+    property real fontSizeSmall: 28
+    property real fontSizeMedium: 32
+    property real fontSizeLarge: 40
+    property real fontSizeExtraLarge: 50
+    property real fontSizeHuge: 64
 
-class QDBusPendingCallWatcher;
+    property real paddingSmall: 6
+    property real paddingMedium: 12
+    property real paddingLarge: 24
 
-class SystemState: public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY(QString displayStatus READ displayStatus NOTIFY displayStatusChanged)
-    Q_PROPERTY(QString lockMode READ lockMode NOTIFY lockModeChanged)
-
-public:
-    explicit SystemState(QObject* aParent = NULL);
-    ~SystemState();
-
-    QString displayStatus() const { return iDisplayStatus; }
-    QString lockMode() const { return iLockMode; }
-
-private:
-    void setupProperty(QString aQueryMethod, QString aSignal,
-        const char* aQuerySlot, const char* aSignalSlot);
-    void setDisplayStatus(QString aStatus);
-    void setLockMode(QString aStatus);
-
-signals:
-    void displayStatusChanged();
-    void lockModeChanged();
-
-private slots:
-    void onDisplayStatusChanged(QString);
-    void onDisplayStatusQueryDone(QDBusPendingCallWatcher*);
-    void onLockModeChanged(QString);
-    void onLockModeQueryDone(QDBusPendingCallWatcher*);
-
-private:
-    QString iDisplayStatus;
-    QString iLockMode;
-};
-
-QML_DECLARE_TYPE(SystemState)
-
-#endif // SYSTEM_STATE_H
+    property variant opacityAnimation: Component {
+        NumberAnimation { duration: 100; easing.type: Easing.InOutQuad }
+    }
+}

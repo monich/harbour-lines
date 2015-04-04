@@ -29,37 +29,18 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick 1.1
+import com.nokia.meego 1.0
+import harbour.lines 1.0
 
-MouseArea {
-    id: button
-    property bool ok
-
-    signal buttonClicked()
-
-    Image {
-        anchors.fill: parent;
-        source: "images/settings-normal.svg"
-        sourceSize.width: width
-        sourceSize.height: height
-        visible: opacity > 0
-        opacity: ok ? 0 : 1
-        Behavior on opacity { FadeAnimation {} }
+Window {
+    id: window
+    SystemState { id: globalSystemState }
+    PlayPage {
+        id: playPage
+        anchors.fill: parent
+        game: LinesGame { prefs: LinesPrefs{} }
+        theme: LinesTheme {}
     }
-
-    Image {
-        anchors.fill: parent;
-        source: "images/settings-ok.svg"
-        sourceSize.width: width
-        sourceSize.height: height
-        visible: opacity > 0
-        opacity: ok ? 1 : 0
-        Behavior on opacity { FadeAnimation {} }
-    }
-
-    onClicked: {
-        mouse.accepted = true
-        button.buttonClicked()
-    }
+    onOrientationChangeFinished: playPage.updateCellSize()
 }

@@ -18,12 +18,24 @@
         <source>menu-new-game</source>
         <translation>Новая игра</translation>
     </message>
+    <message>
+        <source>new-game-question</source>
+        <translation>Начать новую игру?</translation>
+    </message>
+    <message>
+        <source>new-game-accept</source>
+        <translation>Да</translation>
+    </message>
+    <message>
+        <source>new-game-reject</source>
+        <translation>Нет</translation>
+    </message>
 </context>
 <context>
     <name>SettingsPanel</name>
     <message>
         <source>settings-show-next-switch</source>
-        <translation>Показывать следующие шарики</translation>
+        <translation>Следующие шарики</translation>
     </message>
     <message>
         <source>settings-show-next-description</source>

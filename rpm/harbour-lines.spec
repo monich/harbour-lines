@@ -30,7 +30,7 @@ Lines game for Sailfish
 %setup -q -n %{name}-%{version}
 
 %build
-%qtc_qmake5 
+%qtc_qmake5 harbour-lines.pro
 %qtc_make %{?_smp_mflags}
 
 %install

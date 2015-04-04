@@ -31,9 +31,6 @@
 
 #include "LinesState.h"
 
-#include <QJsonObject>
-#include <QJsonArray>
-
 /* JSON keys */
 #define LINES_STATE_JSON_VERSION (1)
 static QString kStateJsonVersion("version");
@@ -106,24 +103,21 @@ bool LinesState::PathSearch::step(LinesPoint aTo)
     return stepsMade > 0;
 }
 
-LinesState::LinesState(const QJsonObject* aJson) :
+LinesState::LinesState(const QVariantMap* aMap) :
     iNextBallsStateIndex(0),
     iEasyPlay(false)
 {
-    QVariantMap map;
-    if (aJson) {
-        map = aJson->toVariantMap();
-        QVariant version = map.value(kStateJsonVersion);
+    if (aMap) {
+        QVariant version = aMap->value(kStateJsonVersion);
         if (version.toInt() != LINES_STATE_JSON_VERSION) {
             qWarning() << "Unexpected state JSON version:" << version;
-            aJson = NULL;
-            map.clear();
+            aMap = NULL;
         }
     }
 
     bool ok = false;
-    if (aJson) {
-        QByteArray data = byteArray(*aJson, kStateJsonNextColors);
+    if (aMap) {
+        QByteArray data = byteArray(*aMap, kStateJsonNextColors);
         if (data.length() == LinesNextBalls) {
             ok = true;
             for (int i=0; i<LinesNextBalls; i++) {
@@ -143,8 +137,8 @@ LinesState::LinesState(const QJsonObject* aJson) :
     }
 
     ok = false;
-    if (aJson) {
-        QByteArray data = byteArray(*aJson, kStateJsonBalls);
+    if (aMap) {
+        QByteArray data = byteArray(*aMap, kStateJsonBalls);
         if (data.length() == LinesGridSize*LinesGridSize) {
             ok = true;
             for (int x=0, i=0; x<LinesGridSize && ok; x++) {
@@ -173,8 +167,8 @@ LinesState::LinesState(const QJsonObject* aJson) :
         }
     }
 
-    if (aJson) {
-        QByteArray data = byteArray(*aJson, kStateJsonSelection);
+    if (aMap) {
+        QByteArray data = byteArray(*aMap, kStateJsonSelection);
         if (data.length() == 2) {
             const int x = data.at(0);
             const int y = data.at(1);
@@ -184,7 +178,7 @@ LinesState::LinesState(const QJsonObject* aJson) :
             }
         }
 
-        data = byteArray(*aJson, kStateJsonRandomSeed);
+        data = byteArray(*aMap, kStateJsonRandomSeed);
         const int seedLen = 8;
         if (data.length() == seedLen) {
             int64_t seed = 0;
@@ -195,9 +189,9 @@ LinesState::LinesState(const QJsonObject* aJson) :
             iRandom.setSeed(seed);
         }
 
-        iScore = map.value(kStateJsonScore).toInt();
-        iSubsequentLines = map.value(kStateJsonSubsequentLines).toInt();
-        iHaveSeenNextColors = map.value(kStateJsonNextColorsKnown).toBool();
+        iScore = aMap->value(kStateJsonScore).toInt();
+        iSubsequentLines = aMap->value(kStateJsonSubsequentLines).toInt();
+        iHaveSeenNextColors = aMap->value(kStateJsonNextColorsKnown).toBool();
 
         if (iScore < 0) iScore = 0;
         if (iSubsequentLines < 0) iSubsequentLines = 0;
@@ -226,12 +220,12 @@ LinesState::LinesState(const LinesState& aState) :
     memcpy(iNextColor, aState.iNextColor, sizeof(iNextColor));
 }
 
-QByteArray LinesState::byteArray(const QJsonObject& aJson, QString aKey)
+QByteArray LinesState::byteArray(const QVariantMap& aMap, QString aKey)
 {
-    return QByteArray::fromHex(aJson.value(aKey).toString().toLocal8Bit());
+    return QByteArray::fromHex(aMap.value(aKey).toString().toLocal8Bit());
 }
 
-QJsonObject LinesState::toJson() const
+QVariantMap LinesState::toVariantMap() const
 {
     int i;
     QByteArray colors;
@@ -256,16 +250,16 @@ QJsonObject LinesState::toJson() const
     const int64_t seed = iRandom.seed();
     for (i=0; i<8; i++) seedData.append((char)(seed >> 8*(7-i)));
 
-    QJsonObject json;
-    json[kStateJsonVersion] = LINES_STATE_JSON_VERSION;
-    json[kStateJsonBalls] = QString(balls.toHex());
-    json[kStateJsonSelection] = QString(selection.toHex());
-    json[kStateJsonNextColors] = QString(colors.toHex());
-    json[kStateJsonNextColorsKnown] = iHaveSeenNextColors;
-    json[kStateJsonSubsequentLines] = iSubsequentLines;
-    json[kStateJsonRandomSeed] = QString(seedData.toHex());
-    json[kStateJsonScore] = iScore;
-    return json;
+    QVariantMap map;
+    map.insert(kStateJsonVersion, LINES_STATE_JSON_VERSION);
+    map.insert(kStateJsonBalls, QString(balls.toHex()));
+    map.insert(kStateJsonSelection, QString(selection.toHex()));
+    map.insert(kStateJsonNextColors, QString(colors.toHex()));
+    map.insert(kStateJsonNextColorsKnown, iHaveSeenNextColors);
+    map.insert(kStateJsonSubsequentLines, iSubsequentLines);
+    map.insert(kStateJsonRandomSeed, QString(seedData.toHex()));
+    map.insert(kStateJsonScore, iScore);
+    return map;
 }
 
 bool LinesState::nextColorsShown()

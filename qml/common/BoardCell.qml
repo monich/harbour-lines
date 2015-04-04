@@ -29,21 +29,21 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import QtQuick 2.0
-import Sailfish.Silica 1.0
+//import QtQuick 1.1  // Harmattan
+import QtQuick 2.0  // Sailfish
 
 MouseArea {
     id: cell
     property int row
     property int column
     property string color
-    property var game
+    property variant game
     state: "EMPTY"
 
     property string _lastColor
     property real _size: 1
     property real _touch: 0
-    readonly property real _animationDuration: 125
+    property real _animationDuration: 125
 
     function stepDone() {
         if (game) game.stepDone(column,row)

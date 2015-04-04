@@ -47,6 +47,9 @@ QuickLinesModel::QuickLinesModel(QObject* aParent) :
     iGame(NULL)
 {
     QDEBUG("created");
+#if QT_VERSION < 0x050000
+    setRoleNames(roleNames());
+#endif
 }
 
 QuickLinesModel::~QuickLinesModel()
@@ -81,6 +84,7 @@ void QuickLinesModel::setGame(QuickLinesGame* aGame)
 
 QHash<int,QByteArray> QuickLinesModel::roleNames() const
 {
+    QDEBUG("QuickLinesModel::roleNames");
     QHash<int, QByteArray> roles;
     roles[CellRow] = "row";
     roles[CellColumn] = "column";

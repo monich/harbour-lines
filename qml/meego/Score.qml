@@ -29,47 +29,12 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import QtQuick 2.0
-import Sailfish.Silica 1.0
-import harbour.lines 1.0
+import QtQuick 1.1
+import com.nokia.meego 1.0
 
-Image {
-    id: board
-    sourceSize.width: width
-    sourceSize.height: height
-    fillMode: Image.PreserveAspectFit
-    source: "images/board.svg"
-    height: width
-
-    property var game
-    property real cellSize: parent.height/Lines.Rows
-
-    GridView {
-        id: grid
-        interactive: false
-        anchors.fill: parent
-        cellHeight: cellSize
-        cellWidth: cellSize
-        model: LinesModel { game: board.game }
-        delegate: BoardCell {
-            width: grid.cellWidth
-            height: grid.cellHeight
-            game: board.game
-            row: model.row
-            column: model.column
-            color: model.color
-            state: model.state
-        }
-        focus: true
-    }
-
-    GameOver {
-        anchors.centerIn: grid
-        width: 7*grid.width/9
-        height: grid.width/3
-        visible: opacity > 0
-        opacity: game.over ? 1 : 0
-        text: game.newRecord ? qsTr("message-new-record") : qsTr("message-game-over")
-        Behavior on opacity { FadeAnimation {} }
-    }
+Label {
+    property variant theme
+    color: "white"
+    font.pixelSize: theme.fontSizeHuge
+    font.bold: true
 }

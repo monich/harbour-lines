@@ -39,7 +39,11 @@
 #include <QDebug>
 
 #if LINES_DEBUG
+#if QT_VERSION >= 0x050000
 #  define QDEBUG(x) qDebug() << x
+#else
+#  define QDEBUG(x) qDebug() << Q_FUNC_INFO << x
+#endif
 #  define QASSERT(x) ((x) ? ((void)0) : qt_assert(#x,__FILE__,__LINE__))
 #  define QVERIFY(x) QASSERT(x)
 #else
