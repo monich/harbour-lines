@@ -5,7 +5,6 @@ Release:    1
 Group:      Amusements/Games
 License:    BSD
 URL:        http://github.com/monich/harbour-lines
-Vendor:     Slava Monich
 Source0:    %{name}-%{version}.tar.bz2
 
 Requires:      sailfishsilica-qt5 >= 0.10.9
