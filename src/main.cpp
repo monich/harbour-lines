@@ -59,10 +59,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 
 #define REGISTER(type,name) qmlRegisterType<type>(LINES_PLUGIN,1,0,name)
 
-#ifdef HARMATTAN_BOOSTER
-Q_DECL_EXPORT
-#endif
-int main(int argc, char *argv[])
+Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QCoreApplication* app = SailfishApp::application(argc, argv);
 
