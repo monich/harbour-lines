@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2015 Jolla Ltd.
+  Copyright (C) 2015-2016 Jolla Ltd.
   Contact: Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
@@ -34,11 +34,15 @@
 #define DCONF_PATH              "/apps/" LINES_APP "/"
 #define DCONF_SHOW_BALL_PATH    "showBallPath"
 #define DCONF_SHOW_NEXT_BALLS   "showNextBalls"
+#define DCONF_SHOW_BALL_SHADOW  "showBallShadow"
+#define DCONF_BALL_STYLE        "ballStyle"
 
 LinesPrefs::LinesPrefs(QObject* aParent) :
     QObject(aParent),
     iShowBallPath(new MGConfItem(DCONF_PATH DCONF_SHOW_BALL_PATH, this)),
-    iShowNextBalls(new MGConfItem(DCONF_PATH DCONF_SHOW_NEXT_BALLS, this))
+    iShowNextBalls(new MGConfItem(DCONF_PATH DCONF_SHOW_NEXT_BALLS, this)),
+    iShowBallShadow(new MGConfItem(DCONF_PATH DCONF_SHOW_BALL_SHADOW, this)),
+    iBallStyle(new MGConfItem(DCONF_PATH DCONF_BALL_STYLE, this))
 {
     connect(iShowBallPath,
         SIGNAL(valueChanged()),
@@ -46,6 +50,12 @@ LinesPrefs::LinesPrefs(QObject* aParent) :
     connect(iShowNextBalls,
         SIGNAL(valueChanged()),
         SIGNAL(showNextBallsChanged()));
+    connect(iShowBallShadow,
+        SIGNAL(valueChanged()),
+        SIGNAL(showBallShadowChanged()));
+    connect(iBallStyle,
+        SIGNAL(valueChanged()),
+        SIGNAL(ballStyleChanged()));
 }
 
 bool LinesPrefs::showBallPath() const
@@ -58,6 +68,16 @@ bool LinesPrefs::showNextBalls() const
     return iShowNextBalls->value(DEFAULT_SHOW_NEXT_BALLS).toBool();
 }
 
+bool LinesPrefs::showBallShadow() const
+{
+    return iShowBallShadow->value(DEFAULT_SHOW_BALL_SHADOW).toBool();
+}
+
+QString LinesPrefs::ballStyle() const
+{
+    return iBallStyle->value(DCONF_DEFAULT_BALL_STYLE).toString();
+}
+
 void LinesPrefs::setShowBallPath(bool aValue)
 {
     iShowBallPath->set(aValue);
@@ -68,8 +88,20 @@ void LinesPrefs::setShowNextBalls(bool aValue)
     iShowNextBalls->set(aValue);
 }
 
+void LinesPrefs::setShowBallShadow(bool aValue)
+{
+    iShowBallShadow->set(aValue);
+}
+
+void LinesPrefs::setBallStyle(QString aValue)
+{
+    iBallStyle->set(aValue);
+}
+
 bool LinesPrefs::equals(const LinesPrefs& aPrefs) const
 {
     return aPrefs.showBallPath() == showBallPath() &&
-           aPrefs.showNextBalls() == showNextBalls();
+           aPrefs.showNextBalls() == showNextBalls() &&
+           aPrefs.showBallShadow() == showBallShadow() &&
+           aPrefs.ballStyle() == ballStyle();
 }

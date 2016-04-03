@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2015 Jolla Ltd.
+  Copyright (C) 2015-2016 Jolla Ltd.
   Contact: Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
@@ -35,6 +35,7 @@ import QtQuick 2.0  // Sailfish
 Item {
     id: ball
     property string color
+    property string style
     property int stateIndex
 
     property string _displayedColor
@@ -63,7 +64,7 @@ Item {
         opacity: _displayedColor ? 1 : 0
         visible: opacity > 0
         anchors.centerIn: parent;
-        source: _displayedColor ? "images/ball-" + _displayedColor + ".svg" : ""
+        source: _displayedColor ? "styles/" + style + "/" +_displayedColor + ".svg" : ""
         sourceSize.width: ball.width
         sourceSize.height: ball.height
         width: parent.width * _size

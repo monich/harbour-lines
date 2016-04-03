@@ -45,6 +45,8 @@ OTHER_FILES += \
     harbour-lines.png \
     qml/common/*.qml \
     qml/common/images/*.svg \
+    qml/common/styles/ball/*.svg \
+    qml/common/styles/shape/*.svg \
     qml/sailfish/*.qml \
     qml/sailfish/cover/*.qml \
     qml/sailfish/images/*.svg \

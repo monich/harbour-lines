@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2015 Jolla Ltd.
+  Copyright (C) 2015-2016 Jolla Ltd.
   Contact: Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
@@ -33,13 +33,13 @@
 
 QuickLinesColors::QuickLinesColors()
 {
-    iColors[LColorRed] = "red";
-    iColors[LColorGreen] = "green";
-    iColors[LColorYellow] = "yellow";
-    iColors[LColorBlue] = "blue";
-    iColors[LColorMagenta] = "magenta";
-    iColors[LColorBrown] = "brown";
-    iColors[LColorCyan] = "cyan";
+    iColors[LColorRed] = "0";
+    iColors[LColorGreen] = "1";
+    iColors[LColorYellow] = "2";
+    iColors[LColorBlue] = "3";
+    iColors[LColorMagenta] = "4";
+    iColors[LColorBrown] = "5";
+    iColors[LColorCyan] = "6";
 }
 
 QuickLinesColors::~QuickLinesColors()

@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2015 Jolla Ltd.
+  Copyright (C) 2015-2016 Jolla Ltd.
   Contact: Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
@@ -35,23 +35,31 @@
 #include "LinesTypes.h"
 #include <MGConfItem>
 
-#define DEFAULT_SHOW_BALL_PATH  true
-#define DEFAULT_SHOW_NEXT_BALLS false
+#define DEFAULT_SHOW_BALL_PATH      true
+#define DEFAULT_SHOW_NEXT_BALLS     false
+#define DEFAULT_SHOW_BALL_SHADOW    true
+#define DCONF_DEFAULT_BALL_STYLE    QString("ball")
 
 class LinesPrefs: public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool showBallPath READ showBallPath WRITE setShowBallPath NOTIFY showBallPathChanged)
     Q_PROPERTY(bool showNextBalls READ showNextBalls WRITE setShowNextBalls NOTIFY showNextBallsChanged)
+    Q_PROPERTY(bool showBallShadow READ showBallShadow WRITE setShowBallShadow NOTIFY showBallShadowChanged)
+    Q_PROPERTY(QString ballStyle READ ballStyle WRITE setBallStyle NOTIFY ballStyleChanged)
 
 public:
     explicit LinesPrefs(QObject* aParent = NULL);
 
     bool showBallPath() const;
     bool showNextBalls() const;
+    bool showBallShadow() const;
+    QString ballStyle() const;
 
     void setShowBallPath(bool aValue);
     void setShowNextBalls(bool aValue);
+    void setShowBallShadow(bool aValue);
+    void setBallStyle(QString aValue);
 
     bool operator==(const LinesPrefs& aPrefs) const { return equals(aPrefs); }
     bool operator!=(const LinesPrefs& aPrefs) const { return !equals(aPrefs); }
@@ -60,10 +68,14 @@ public:
 Q_SIGNALS:
     void showBallPathChanged();
     void showNextBallsChanged();
+    void showBallShadowChanged();
+    void ballStyleChanged();
 
 private:
     MGConfItem* iShowBallPath;
     MGConfItem* iShowNextBalls;
+    MGConfItem* iShowBallShadow;
+    MGConfItem* iBallStyle;
 };
 
 QML_DECLARE_TYPE(LinesPrefs)

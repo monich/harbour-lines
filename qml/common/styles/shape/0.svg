@@ -15,9 +15,20 @@
    id="svg14855"
    sodipodi:version="0.32"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="ball-yellow.svg"
+   sodipodi:docname="0.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0">
+  <metadata
+     id="metadata4279">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
   <defs
      id="defs14857">
     <linearGradient
@@ -25,17 +36,9 @@
       <stop
          id="stop15842"
          offset="0"
-         style="stop-color:#ffff00;stop-opacity:1;" />
+         style="stop-color:#ff0000;stop-opacity:1;" />
       <stop
-         style="stop-color:#e8e800;stop-opacity:1;"
-         offset="0.33000001"
-         id="stop15848" />
-      <stop
-         id="stop15850"
-         offset="0.66000003"
-         style="stop-color:#c3c300;stop-opacity:1;" />
-      <stop
-         style="stop-color:#b4b400;stop-opacity:1;"
+         style="stop-color:#a50000;stop-opacity:1;"
          offset="1"
          id="stop15838" />
     </linearGradient>
@@ -43,13 +46,13 @@
        inkscape:collect="always"
        xlink:href="#linearGradient15834"
        id="radialGradient3780"
-       cx="407.87939"
-       cy="491.09134"
-       fx="407.87939"
-       fy="491.09134"
+       cx="290.78244"
+       cy="495.702"
+       fx="290.78244"
+       fy="495.702"
        r="225.71428"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.4299987,-0.03532296,0.05144621,2.0827236,-51.674014,-478.1435)" />
+       gradientTransform="matrix(-0.8972722,0.98625789,-0.98625805,-0.89727229,1139.4476,701.98864)" />
   </defs>
   <g
      inkscape:groupmode="layer"
@@ -79,7 +82,7 @@
            sodipodi:cy="-155.72037"
            sodipodi:cx="-178.9864"
            id="path3788"
-           style="fill:none;stroke:#767600;stroke-width:4.678;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           style="fill:none;stroke:#760000;stroke-width:4.678;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
            sodipodi:type="arc" />
       </g>
     </g>

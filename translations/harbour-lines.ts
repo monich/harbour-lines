@@ -34,12 +34,24 @@
 <context>
     <name>SettingsPanel</name>
     <message>
+        <source>settings-style</source>
+        <translation>Style</translation>
+    </message>
+    <message>
+        <source>settings-style-ball</source>
+        <translation>Color balls</translation>
+    </message>
+    <message>
+        <source>settings-style-shape</source>
+        <translation>Color shapes</translation>
+    </message>
+    <message>
         <source>settings-show-next-switch</source>
         <translation>Show next balls</translation>
     </message>
     <message>
         <source>settings-show-next-description</source>
-        <translation>That makes it easier to play but you earn more points if you don&apos;t know colors of the next balls.</translation>
+        <translation>That makes it easier to play but you earn more points if you don&apos;t know next colors.</translation>
     </message>
     <message>
         <source>settings-animate-movement-switch</source>
@@ -47,7 +59,7 @@
     </message>
     <message>
         <source>settings-animate-movement-description</source>
-        <translation>Ball movement may be fun to watch but takes a bit of time. Note that you don&apos;t need to wait for the entire animation to complete.</translation>
+        <translation>Note that you don&apos;t need to wait for the entire animation to complete, you can select the next ball right away.</translation>
     </message>
 </context>
 </TS>

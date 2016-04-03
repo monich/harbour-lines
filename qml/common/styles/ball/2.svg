@@ -15,7 +15,7 @@
    id="svg14855"
    sodipodi:version="0.32"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="ball-green.svg"
+   sodipodi:docname="2.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0">
   <defs
@@ -25,17 +25,17 @@
       <stop
          id="stop15842"
          offset="0"
-         style="stop-color:#00eb00;stop-opacity:1;" />
+         style="stop-color:#ffff00;stop-opacity:1;" />
       <stop
-         style="stop-color:#00c600;stop-opacity:1;"
+         style="stop-color:#e8e800;stop-opacity:1;"
          offset="0.33000001"
          id="stop15848" />
       <stop
          id="stop15850"
          offset="0.66000003"
-         style="stop-color:#00a000;stop-opacity:1;" />
+         style="stop-color:#c3c300;stop-opacity:1;" />
       <stop
-         style="stop-color:#009100;stop-opacity:1;"
+         style="stop-color:#b4b400;stop-opacity:1;"
          offset="1"
          id="stop15838" />
     </linearGradient>
@@ -79,7 +79,7 @@
            sodipodi:cy="-155.72037"
            sodipodi:cx="-178.9864"
            id="path3788"
-           style="fill:none;stroke:#007600;stroke-width:4.678;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           style="fill:none;stroke:#767600;stroke-width:4.678;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
            sodipodi:type="arc" />
       </g>
     </g>

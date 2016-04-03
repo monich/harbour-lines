@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2015 Jolla Ltd.
+  Copyright (C) 2015-2016 Jolla Ltd.
   Contact: Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
@@ -47,6 +47,7 @@ Page {
     property bool _firstScore: true
     property int _displayedScore: 0
     property int _score: game ? game.score : 0
+    property string _ballStyle: (game && game.prefs) ? game.prefs.ballStyle : "ball"
     property real cellSize: _portrait ?
         Math.min((width - 2*theme.paddingLarge)/Lines.Columns,
                  (height - 4*theme.paddingLarge)/(Lines.Rows+2)) :
@@ -113,6 +114,7 @@ Page {
                 width: cellSize
                 height: cellSize
                 color: model.color
+                style: page._ballStyle
                 stateIndex: nextBallsModel.stateIndex
             }
             visible: opacity > 0

@@ -34,12 +34,24 @@
 <context>
     <name>SettingsPanel</name>
     <message>
+        <source>settings-style</source>
+        <translation>Стиль</translation>
+    </message>
+    <message>
+        <source>settings-style-ball</source>
+        <translation>Цветные шарики</translation>
+    </message>
+    <message>
+        <source>settings-style-shape</source>
+        <translation>Цветные фигурки    </translation>
+    </message>
+    <message>
         <source>settings-show-next-switch</source>
         <translation>Следующие шарики</translation>
     </message>
     <message>
         <source>settings-show-next-description</source>
-        <translation>Так проще играть, но вы будете получать немного меньше очков за первый собранный ряд.</translation>
+        <translation>Так проще, но вы получаете немного меньше очков за первый собранный ряд.</translation>
     </message>
     <message>
         <source>settings-animate-movement-switch</source>
@@ -47,7 +59,7 @@
     </message>
     <message>
         <source>settings-animate-movement-description</source>
-        <translation>Может быть забавно наблюдать, как шарики попадают с одного поля на другое, но это немного замедляет игру.</translation>
+        <translation>Забавно наблюдать, как шарики попадают с одного поля на другое, но это немного замедляет игру.</translation>
     </message>
 </context>
 </TS>

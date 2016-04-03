@@ -37,19 +37,94 @@ MouseArea {
 
     property var prefs
 
+    Component.onCompleted: styleComboBox.updateCurrentStyle()
+
+    Connections {
+        target: prefs
+        onBallStyleChanged: styleComboBox.updateCurrentStyle()
+    }
+
     Image {
         anchors.fill: parent
         sourceSize.width: width
         sourceSize.height: height
         fillMode: Image.PreserveAspectFit
         source: "images/settings-bg.svg"
+    }
+
+    SilicaFlickable {
+        x: Theme.paddingLarge
+        width: parent.width - 2*Theme.paddingLarge
+        height: parent.height
+        anchors.centerIn: parent
+        contentHeight: content.height
+        clip: true
 
         Column {
-            width: parent.width - 2*Theme.paddingLarge
+            id: content
+            width: parent.width
             anchors {
                 top: parent.top
                 topMargin: Theme.paddingLarge
                 horizontalCenter: parent.horizontalCenter
+            }
+            ComboBox {
+                id: styleComboBox
+                property bool _externalChange: false
+
+                function updateCurrentStyle() {
+                    var savedFlag = styleComboBox._externalChange
+                    styleComboBox._externalChange = true
+                    if (prefs && prefs.ballStyle) {
+                        var itemFound = null
+                        var style = prefs.ballStyle
+                        var items = styleMenu.children
+                        if (items) {
+                            for (var i=0; i<items.length; i++) {
+                                if (items[i].style === style) {
+                                    itemFound = items[i]
+                                    break;
+                                }
+                            }
+                        }
+                        if (itemFound) {
+                            currentItem = itemFound
+                        } else {
+                            currentItem = null
+                        }
+                    } else {
+                        currentItem = null
+                    }
+                    styleComboBox._externalChange = savedFlag
+                }
+
+                onCurrentIndexChanged: {
+                    if (!styleComboBox._externalChange && currentItem) {
+                        // First make sure that shadow is hidden. The style
+                        // may have no shadow, and switching the style first
+                        // may result in attempt to open non-existent image.
+                        prefs.showBallShadow = false
+                        prefs.ballStyle = currentItem.style
+                        prefs.showBallShadow = currentItem.shadow
+                    }
+                }
+
+                width: parent.width
+                label: qsTr("settings-style")
+                menu: ContextMenu {
+                    id: styleMenu
+                    x: 0
+                    MenuItem {
+                        text: qsTr("settings-style-ball")
+                        readonly property string style: "ball"
+                        readonly property bool shadow: true
+                    }
+                    MenuItem {
+                        text: qsTr("settings-style-shape")
+                        readonly property string style: "shape"
+                        readonly property bool shadow: false
+                    }
+                }
             }
             TextSwitch {
                 text: qsTr("settings-show-next-switch")

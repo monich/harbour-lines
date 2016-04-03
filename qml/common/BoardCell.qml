@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2015 Jolla Ltd.
+  Copyright (C) 2015-2016 Jolla Ltd.
   Contact: Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
@@ -44,6 +44,8 @@ MouseArea {
     property real _size: 1
     property real _touch: 0
     property real _animationDuration: 125
+    property string _style: (game && game.prefs) ? game.prefs.ballStyle : "ball"
+    property bool _haveShadow: game && game.prefs && game.prefs.showBallShadow
 
     function stepDone() {
         if (game) game.stepDone(column,row)
@@ -76,9 +78,9 @@ MouseArea {
 
     Image {
         anchors.horizontalCenter: parent.horizontalCenter
-        opacity: (ball.opacity && ball.source) ? 1 : 0
+        opacity: (ball.opacity && ball.source && _haveShadow) ? 1 : 0
         visible: opacity > 0
-        source: "images/shadow.svg"
+        source: _haveShadow ? "styles/" + _style +  "/shadow.svg" : ""
         sourceSize.width: cell.width
         sourceSize.height: cell.height
         width: ball.width
@@ -90,7 +92,7 @@ MouseArea {
         opacity: (color || _lastColor) ? 1 : 0
         visible: opacity > 0
         anchors.centerIn: parent;
-        source: (color || _lastColor) ? "images/ball-" + (color ? color : _lastColor) + ".svg" : ""
+        source: (color || _lastColor) ? "styles/" + _style + "/" + (color ? color : _lastColor) + ".svg" : ""
         sourceSize.width: cell.width
         sourceSize.height: cell.height
         width: parent.width * _size
