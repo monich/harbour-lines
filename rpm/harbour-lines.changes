@@ -1,3 +1,6 @@
+* Sun Apr 3 2016 Slava Monich <slava.monich@jolla.com> 1.0.2
+- Added option to use different shapes for different colors
+
 * Sat Feb 28 2015 Slava Monich <slava.monich@jolla.com> 1.0.1
 - Tweaked colors, particularly yellow/green and red/brown
 - Stop jump animation when the screen is locked
