@@ -1,3 +1,9 @@
+meego-lines (1.0.2) unstable; urgency=low
+
+   * Added option to use different shapes for different colors
+
+ -- Slava Monich <slava.monich@jolla.com>  Mon, 04 Apr 2016 00:53:56 +0300
+
 meego-lines (1.0.1) unstable; urgency=low
 
    * Tweaked colors, particularly yellow/green and red/brown

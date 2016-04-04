@@ -56,6 +56,8 @@ OTHER_FILES += \
     qml/meego/*.qml \
     qml/common/*.qml \
     qml/common/images/*.svg \
+    qml/common/styles/ball/*.svg \
+    qml/common/styles/shape/*.svg \
     qml/meego/images/*.svg \
     rpm/harbour-lines.changes \
     rpm/harbour-lines.spec \
