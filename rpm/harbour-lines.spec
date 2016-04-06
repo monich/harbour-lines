@@ -46,6 +46,7 @@ desktop-file-install --delete-original \
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/86x86/apps/%{name}.png
+%exclude %{_datadir}/%{name}/qml/meego
 
 %changelog
 * Sat Feb 21 2015 Slava Monich <slava.monich@jolla.com> 1.0.0
