@@ -7,6 +7,7 @@
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
   are met:
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -33,8 +34,10 @@
 #include "QuickLinesModel.h"
 #include "QuickLinesGame.h"
 #include "QuickNextBallsModel.h"
-#include "SystemState.h"
 #include "LinesPrefs.h"
+
+#include "HarbourSystemState.h"
+#include "HarbourDebug.h"
 
 #include <QtGui>
 
@@ -71,7 +74,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
         translator->load(transFile, transDir)) {
         app->installTranslator(translator);
     } else {
-        qWarning() << "Failed to load translator for" << locale;
+        HWARN("Failed to load translator for" << locale);
         delete translator;
     }
 
@@ -80,7 +83,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     REGISTER(QuickLinesGame, "LinesGame");
     REGISTER(QuickNextBallsModel, "NextBallsModel");
     REGISTER(LinesPrefs, "LinesPrefs");
-    REGISTER(SystemState, "SystemState");
+    REGISTER(HarbourSystemState, "SystemState");
 
     QQuickView *view = SailfishApp::createView();
     view->setSource(SailfishApp::pathTo(MAIN_QML));

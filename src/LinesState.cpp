@@ -1,20 +1,21 @@
 /*
-  Copyright (C) 2015 Jolla Ltd.
-  Contact: Slava Monich <slava.monich@jolla.com>
+  Copyright (C) 2015-2019 Jolla Ltd.
+  Copyright (C) 2015-2019 Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
   are met:
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Jolla Ltd nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
+    * Neither the names of the copyright holders nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -30,6 +31,8 @@
 */
 
 #include "LinesState.h"
+
+#include "HarbourDebug.h"
 
 /* JSON keys */
 #define LINES_STATE_JSON_VERSION (1)
@@ -265,7 +268,7 @@ QVariantMap LinesState::toVariantMap() const
 bool LinesState::nextColorsShown()
 {
     if (!iHaveSeenNextColors) {
-        QDEBUG("cheating!");
+        HDEBUG("cheating!");
         iHaveSeenNextColors = true;
         return true;
     }
@@ -321,7 +324,7 @@ void LinesState::buildLine(LinesSet aLine, LinesPoint aPoint)
 
 LinesColor LinesState::nextColor(int aIndex) const
 {
-    QASSERT(aIndex >= 0 && aIndex < LinesNextBalls);
+    HASSERT(aIndex >= 0 && aIndex < LinesNextBalls);
     if (aIndex >= 0 && aIndex < LinesNextBalls) {
         return iNextColor[aIndex];
     }
@@ -333,14 +336,14 @@ bool LinesState::select(LinesPoint aPoint)
     if (aPoint.isValid()) {
         if (colorAt(aPoint) != LColorNone) {
             iSelection = aPoint;
-            QDEBUG("selected" << qPrintable(aPoint.toString()));
+            HDEBUG("selected" << qPrintable(aPoint.toString()));
             return true;
         } else {
-            QDEBUG("nothing at" << qPrintable(aPoint.toString()));
+            HDEBUG("nothing at" << qPrintable(aPoint.toString()));
             return false;
         }
     } else if (iSelection.isValid()) {
-        QDEBUG("cleared selection");
+        HDEBUG("cleared selection");
         iSelection.invalidate();
         return true;
     } else {
@@ -359,7 +362,7 @@ void LinesState::generateNextColors()
     iNextBallsStateIndex++;
     for (int i=0; i<LinesNextBalls; i++) {
         iNextColor[i] = iRandom.nextColor();
-        QDEBUG("next color" << iNextColor[i]);
+        HDEBUG("next color" << iNextColor[i]);
     }
 }
 
@@ -367,11 +370,11 @@ LinesPoint LinesState::dropBall(LinesColor aColor)
 {
     const int n = iAvailable.size();
     if (n > 0) {
-        QASSERT(aColor != LColorNone);
+        HASSERT(aColor != LColorNone);
         const int i = iRandom.next(n);
         LinesPoint p = iAvailable.takeAt(i);
         iGrid[p.x][p.y] = aColor;
-        QDEBUG("dropped" << aColor << "at" << qPrintable(p.toString()));
+        HDEBUG("dropped" << aColor << "at" << qPrintable(p.toString()));
         return p;
     }
     return LinesPoint();
@@ -383,14 +386,14 @@ void LinesState::removeBall(LinesPoint aPoint)
         iGrid[aPoint.x][aPoint.y] = LColorNone;
         iAvailable.append(aPoint);
     } else {
-        QDEBUG("no ball at" << qPrintable(aPoint.toString()));
+        HDEBUG("no ball at" << qPrintable(aPoint.toString()));
     }
 }
 
 void LinesState::removeBalls(LinesPoints aPoints)
 {
     const int n = aPoints.size();
-    QDEBUG("removing" << n << "balls");
+    HDEBUG("removing" << n << "balls");
     for (int i=0; i<n; i++) {
         removeBall(aPoints.at(i));
     }
@@ -414,14 +417,14 @@ LinesPoints LinesState::findPath(LinesPoint aFrom, LinesPoint aTo) const
 
         if (search.iFound >= 0) {
             LinesPoints path(search.iPathSet.at(search.iFound));
-#if LINES_DEBUG
-            QASSERT(path.last().equal(aTo));
+#if HARBOUR_DEBUG
+            HASSERT(path.last().equal(aTo));
             QString pathString(path.first().toString());
             for (int i=1; i<path.size(); i++) {
                 pathString.append(" -> ").append(path.at(i).toString());
             }
-            QDEBUG("found path" << qPrintable(pathString));
-            QDEBUG(search.iPathSet.size() << "paths tried");
+            HDEBUG("found path" << qPrintable(pathString));
+            HDEBUG(search.iPathSet.size() << "paths tried");
 #endif
             return path;
         }
@@ -455,8 +458,8 @@ LinesState* LinesState::move(LinesPoint aFrom, LinesPoint aTo) const
     LinesColor color = colorAt(aFrom);
     if (color != LColorNone && aTo.isValid() && !hasBallAt(aTo)) {
         LinesState* state = new LinesState(*this);
-        QVERIFY(state->iAvailable.removeOne(aTo));
-        QASSERT(!state->iAvailable.contains(aFrom));
+        HVERIFY(state->iAvailable.removeOne(aTo));
+        HASSERT(!state->iAvailable.contains(aFrom));
         state->iAvailable.append(aFrom);
         state->iGrid[aFrom.x][aFrom.y] = LColorNone;
         state->iGrid[aTo.x][aTo.y] = color;

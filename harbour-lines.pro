@@ -6,7 +6,7 @@ QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-psabi
 QT += qml quick
 
 CONFIG(debug, debug|release) {
-  DEFINES += LINES_DEBUG=1
+  DEFINES += HARBOUR_DEBUG=1
   QMAKE_CXXFLAGS_DEBUG *= -O0
   QMAKE_CFLAGS_DEBUG *= -O0
 }
@@ -22,12 +22,10 @@ SOURCES += \
     src/QuickLinesColors.cpp \
     src/QuickLinesGame.cpp \
     src/QuickLinesModel.cpp \
-    src/QuickNextBallsModel.cpp \
-    src/SystemState.cpp
+    src/QuickNextBallsModel.cpp
 
 HEADERS += \
     src/LinesBalls.h \
-    src/LinesDebug.h \
     src/LinesScores.h \
     src/LinesSet.h \
     src/LinesState.h \
@@ -37,8 +35,7 @@ HEADERS += \
     src/QuickLinesColors.h \
     src/QuickLinesGame.h \
     src/QuickLinesModel.h \
-    src/QuickNextBallsModel.h \
-    src/SystemState.h
+    src/QuickNextBallsModel.h
 
 OTHER_FILES += \
     harbour-lines.desktop \
@@ -53,6 +50,27 @@ OTHER_FILES += \
     rpm/harbour-lines.changes \
     rpm/harbour-lines.spec \
     translations/*.ts
+
+# harbour-lib
+
+HARBOUR_LIB_REL = harbour-lib
+HARBOUR_LIB_DIR = $${_PRO_FILE_PWD_}/$${HARBOUR_LIB_REL}
+HARBOUR_LIB_INCLUDE = $${HARBOUR_LIB_DIR}/include
+HARBOUR_LIB_SRC = $${HARBOUR_LIB_DIR}/src
+
+INCLUDEPATH += \
+    $${HARBOUR_LIB_DIR}/include
+
+HEADERS += \
+    $${HARBOUR_LIB_INCLUDE}/HarbourDebug.h \
+    $${HARBOUR_LIB_INCLUDE}/HarbourJson.h \
+    $${HARBOUR_LIB_INCLUDE}/HarbourSystemState.h \
+    $${HARBOUR_LIB_SRC}/HarbourMce.h
+
+SOURCES += \
+    $${HARBOUR_LIB_SRC}/HarbourJson.cpp \
+    $${HARBOUR_LIB_SRC}/HarbourMce.cpp \
+    $${HARBOUR_LIB_SRC}/HarbourSystemState.cpp
 
 # to disable building translations every time, comment out the
 # following CONFIG line

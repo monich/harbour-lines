@@ -1,20 +1,21 @@
 /*
-  Copyright (C) 2015 Jolla Ltd.
-  Contact: Slava Monich <slava.monich@jolla.com>
+  Copyright (C) 2015-2019 Jolla Ltd.
+  Copyright (C) 2015-2019 Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
   are met:
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Jolla Ltd nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
+    * Neither the names of the copyright holders nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -30,86 +31,9 @@
 */
 
 #include "QuickLinesGame.h"
-#include "LinesDebug.h"
 
-#include <QDir>
-
-//===========================================================================
-// JSON serialization
-//===========================================================================
-
-#if QT_VERSION >= 0x050000
-#  include <QJsonDocument>
-#  include <QJsonObject>
-#else
-#  include <qjson/parser.h>
-#  include <qjson/serializer.h>
-#endif
-
-static bool saveJson(QString aPath, const QVariantMap& aMap)
-{
-    QFileInfo file(aPath);
-    QDir dir(file.dir());
-    if (dir.mkpath(dir.absolutePath())) {
-        QFile f(file.absoluteFilePath());
-        if (!aMap.isEmpty()) {
-            if (f.open(QIODevice::WriteOnly)) {
-#if QT_VERSION >= 0x050000
-                if (f.write(QJsonDocument::fromVariant(aMap).toJson()) >= 0) {
-                    return true;
-                }
-#else
-                QJson::Serializer serializer;
-                QByteArray json = serializer.serialize(aMap);
-                if (!json.isNull()) {
-                    if (f.write(json ) >= 0) {
-                        return true;
-                    }
-                } else {
-                    qWarning() << "Json serialization error";
-                }
-#endif
-                qWarning() << "Error writing" << aPath << f.errorString();
-            } else {
-                qWarning() << "Error opening" << aPath << f.errorString();
-            }
-        } else if (!f.remove()) {
-            qWarning() << "Error removing" << aPath << f.errorString();
-        }
-    } else {
-        qWarning() << "Failed to create" << dir.absolutePath();
-    }
-    return false;
-}
-
-static bool loadJson(QString aPath, QVariantMap& aRoot)
-{
-    QFile f(aPath);
-    if (f.exists()) {
-        if (f.open(QIODevice::ReadOnly)) {
-            QDEBUG("reading" << aPath);
-#if QT_VERSION >= 0x050000
-            QJsonDocument doc(QJsonDocument::fromJson(f.readAll()).object());
-            if (!doc.isEmpty()) {
-                aRoot = doc.toVariant().toMap();
-                return true;
-            }
-#else
-            QJson::Parser parser;
-            QVariant result = parser.parse(&f);
-            if (result.isValid()) {
-                aRoot = result.toMap();
-                return true;
-            } else {
-                qWarning() << "Failed to parse" << qPrintable(aPath);
-            }
-#endif
-        } else {
-            QDEBUG("can't open" << aPath << f.errorString());
-        }
-    }
-    return false;
-}
+#include "HarbourDebug.h"
+#include "HarbourJson.h"
 
 //===========================================================================
 // QuickLinesGame
@@ -123,11 +47,11 @@ QuickLinesGame::QuickLinesGame(QObject* aParent) :
     iState(loadState()),
     iScores(loadScores())
 {
-    QDEBUG((void*)this << "- created");
+    HDEBUG((void*)this << "- created");
     if (!iScores) iScores = new LinesScores(NULL);
     if (iState) {
         if (!iState->hasEmptyCells()) {
-            QDEBUG("the last game was over, starting new one");
+            HDEBUG("the last game was over, starting new one");
             restart();
         }
     } else {
@@ -138,17 +62,17 @@ QuickLinesGame::QuickLinesGame(QObject* aParent) :
 
 QuickLinesGame::~QuickLinesGame()
 {
-    QDEBUG((void*)this << "- destroyed");
+    HDEBUG((void*)this << "- destroyed");
     delete iState;
     delete iScores;
 }
 
-QString QuickLinesGame::defaultStateFile()
+QString QuickLinesGame::stateFile()
 {
     return linesDataDir() + QStringLiteral("state.json");
 }
 
-QString QuickLinesGame::defaultScoresFile()
+QString QuickLinesGame::scoreFile()
 {
     return linesDataDir() + QStringLiteral("scores.json");
 }
@@ -165,7 +89,7 @@ bool QuickLinesGame::newRecord() const
 
 void QuickLinesGame::setPrefs(LinesPrefs* aPrefs)
 {
-    QDEBUG("prefs" << (void*)aPrefs);
+    HDEBUG("prefs" << (void*)aPrefs);
     if (iPrefs != aPrefs) {
         if (iPrefs) iPrefs->disconnect(this);
         iPrefs = aPrefs;
@@ -206,7 +130,7 @@ bool QuickLinesGame::handleClick(LinesPoint aPoint)
         } else if (selection.isValid()) {
             LinesPoints path = iState->findPath(selection, aPoint);
             if (path.isEmpty()) {
-                QDEBUG("can't move ball from" <<
+                HDEBUG("can't move ball from" <<
                     qPrintable(selection.toString()) << "to" <<
                     qPrintable(aPoint.toString()));
             } else {
@@ -268,7 +192,7 @@ void QuickLinesGame::setState(LinesState* aState)
 
         const int newScore = score();
         if (prevScore != newScore) {
-            QDEBUG("score" << newScore);
+            HDEBUG("score" << newScore);
             Q_EMIT scoreChanged();
             if (prevScore > newScore && iScores->addHighScore(prevScore)) {
                 // Record the last score
@@ -296,23 +220,23 @@ void QuickLinesGame::saveState() const
 {
     QVariantMap map;
     if (iState) map = iState->toVariantMap();
-    saveJson(defaultStateFile(), map);
+    HarbourJson::save(stateFile(), map);
 }
 
 void QuickLinesGame::saveScores() const
 {
-    QDEBUG("saving" << qPrintable(defaultScoresFile()));
-    saveJson(defaultScoresFile(), iScores->toVariantMap());
+    HDEBUG("saving" << qPrintable(scoreFile()));
+    HarbourJson::save(scoreFile(), iScores->toVariantMap());
 }
 
 LinesState* QuickLinesGame::loadState()
 {
     QVariantMap map;
-    return loadJson(defaultStateFile(), map) ? new LinesState(&map) : NULL;
+    return HarbourJson::load(stateFile(), map) ? new LinesState(&map) : NULL;
 }
 
 LinesScores* QuickLinesGame::loadScores()
 {
     QVariantMap map;
-    return loadJson(defaultScoresFile(), map) ? new LinesScores(&map) : NULL;
+    return HarbourJson::load(scoreFile(), map) ? new LinesScores(&map) : NULL;
 }

@@ -1,20 +1,21 @@
 /*
-  Copyright (C) 2015 Jolla Ltd.
-  Contact: Slava Monich <slava.monich@jolla.com>
+  Copyright (C) 2015-2019 Jolla Ltd.
+  Copyright (C) 2015-2019 Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
   are met:
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Jolla Ltd nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
+    * Neither the names of the copyright holders nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -32,6 +33,8 @@
 #include "QuickLinesModel.h"
 #include "LinesTypes.h"
 
+#include "HarbourDebug.h"
+
 #define SUPER QAbstractListModel
 
 enum QuickLinesModelRole {
@@ -46,7 +49,7 @@ QuickLinesModel::QuickLinesModel(QObject* aParent) :
     iMoveStep(-1),
     iGame(NULL)
 {
-    QDEBUG("created");
+    HDEBUG("created");
 #if QT_VERSION < 0x050000
     setRoleNames(roleNames());
 #endif
@@ -54,12 +57,12 @@ QuickLinesModel::QuickLinesModel(QObject* aParent) :
 
 QuickLinesModel::~QuickLinesModel()
 {
-    QDEBUG("destroyed");
+    HDEBUG("destroyed");
 }
 
 void QuickLinesModel::setGame(QuickLinesGame* aGame)
 {
-    QDEBUG("game" << (void*)aGame);
+    HDEBUG("game" << (void*)aGame);
     if (iGame != aGame) {
         if (iGame) iGame->disconnect(this);
         iGame = aGame;
@@ -84,7 +87,7 @@ void QuickLinesModel::setGame(QuickLinesGame* aGame)
 
 QHash<int,QByteArray> QuickLinesModel::roleNames() const
 {
-    QDEBUG("QuickLinesModel::roleNames");
+    HDEBUG("roleNames");
     QHash<int, QByteArray> roles;
     roles[CellRow] = "row";
     roles[CellColumn] = "column";
@@ -189,7 +192,7 @@ LinesPoint QuickLinesModel::selection() const
 
 void QuickLinesModel::onSelectionChanged(LinesPoint aPrev, LinesPoint aCurrent)
 {
-    QDEBUG("selection changed" <<
+    HDEBUG("selection changed" <<
         qPrintable(aPrev.toString()) << "->" <<
         qPrintable(aCurrent.toString()));
     if (aPrev.isValid()) {
@@ -234,7 +237,7 @@ void QuickLinesModel::onMoveStepDone(LinesPoint aPoint)
             LinesPoints path(iMove);
             iMoveStep = -1;
             iMove.clear();
-            QDEBUG("arrived at" << qPrintable(path.last().toString()));
+            HDEBUG("arrived at" << qPrintable(path.last().toString()));
             LinesPoints change(iGame->moveBall(path.first(), path.last()));
             const int n = path.size();
             for (int i=0; i<n; i++) {
@@ -246,7 +249,7 @@ void QuickLinesModel::onMoveStepDone(LinesPoint aPoint)
             }
         }
     } else {
-        QDEBUG("unexpected move at" << qPrintable(aPoint.toString()));
+        HDEBUG("unexpected move at" << qPrintable(aPoint.toString()));
     }
 }
 
@@ -255,7 +258,7 @@ void QuickLinesModel::onStateChanged(LinesState* aPrev, LinesState* aCurrent)
     if (aPrev && aCurrent) {
         LinesPoints diff = aPrev->diff(*aCurrent);
         const int n = diff.size();
-        QDEBUG(n << "cells changed");
+        HDEBUG(n << "cells changed");
         for (int i=0; i<n; i++) {
             QModelIndex index(indexFromPoint(diff.at(i)));
             Q_EMIT dataChanged(index, index);
