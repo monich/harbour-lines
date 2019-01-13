@@ -36,6 +36,7 @@
 #include "QuickNextBallsModel.h"
 #include "LinesPrefs.h"
 
+#include "HarbourImageProvider.h"
 #include "HarbourSystemState.h"
 #include "HarbourDebug.h"
 
@@ -86,6 +87,13 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     REGISTER(HarbourSystemState, "SystemState");
 
     QQuickView *view = SailfishApp::createView();
+    QQmlContext* context = view->rootContext();
+    QQmlEngine* engine = context->engine();
+
+    QString imageProvider("harbour");
+    context->setContextProperty("HarbourImageProvider", imageProvider);
+    engine->addImageProvider(imageProvider, new HarbourImageProvider);
+
     view->setSource(SailfishApp::pathTo(MAIN_QML));
     view->show();
 
