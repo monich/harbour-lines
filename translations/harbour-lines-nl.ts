@@ -51,7 +51,7 @@
     </message>
     <message>
         <source>settings-show-next-description</source>
-        <translation>Dit maakt het spel eenvoudiger, maar je krijgt meer punten als je de volgende ballen niet kent</translation>
+        <translation>Dit maakt het spel eenvoudiger, maar je krijgt meer punten als je de volgende ballen niet kent.</translation>
     </message>
     <message>
         <source>settings-animate-movement-switch</source>
