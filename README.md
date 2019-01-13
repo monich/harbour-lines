@@ -1,3 +1,3 @@
-Lines game for Sailfish.
+Lines game for Sailfish OS
 
-![icon](harbour-lines.png)
+![icon](icons/86x86/harbour-lines.png)

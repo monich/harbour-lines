@@ -39,8 +39,9 @@ HEADERS += \
     src/QuickNextBallsModel.h
 
 OTHER_FILES += \
+    README.md \
     harbour-lines.desktop \
-    harbour-lines.png \
+    icons/*.svg \
     qml/common/*.qml \
     qml/common/images/*.svg \
     qml/common/styles/ball/*.svg \
@@ -72,6 +73,16 @@ SOURCES += \
     $${HARBOUR_LIB_SRC}/HarbourImageProvider.cpp \
     $${HARBOUR_LIB_SRC}/HarbourJson.cpp \
     $${HARBOUR_LIB_SRC}/HarbourTheme.cpp
+
+# Icons
+ICON_SIZES = 86 108 128 256
+for(s, ICON_SIZES) {
+    icon_target = icon$${s}
+    icon_dir = icons/$${s}x$${s}
+    $${icon_target}.files = $${icon_dir}/$${TARGET}.png
+    $${icon_target}.path = /usr/share/icons/hicolor/$${s}x$${s}/apps
+    INSTALLS += $${icon_target}
+}
 
 # to disable building translations every time, comment out the
 # following CONFIG line
