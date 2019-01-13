@@ -3,7 +3,7 @@ CONFIG += link_pkgconfig
 CONFIG += sailfishapp
 PKGCONFIG += glib-2.0 gio-2.0 mlite5
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-psabi
-QT += svg
+QT += qml quick
 
 CONFIG(debug, debug|release) {
   DEFINES += LINES_DEBUG=1
@@ -60,23 +60,3 @@ CONFIG += sailfishapp_i18n
 TRANSLATIONS += \
     translations/harbour-lines.ts \
     translations/harbour-lines-ru.ts
-
-# qtsvg
-
-DEFINES += QT_STATIC QT_STATICPLUGIN
-
-QT_SVG_PLUGIN_DIR = qtsvg
-
-INCLUDEPATH += \
-  $$QT_SVG_PLUGIN_DIR
-
-SOURCES += \
-  $$QT_SVG_PLUGIN_DIR/qsvgiohandler.cpp \
-  $$QT_SVG_PLUGIN_DIR/qsvgplugin.cpp
-
-HEADERS += \
-  $$QT_SVG_PLUGIN_DIR/qsvgiohandler.h \
-  $$QT_SVG_PLUGIN_DIR/qsvgplugin.h
-
-OTHER_FILES += \
-  $$QT_SVG_PLUGIN_DIR/svg.json
