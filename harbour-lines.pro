@@ -66,15 +66,11 @@ HEADERS += \
     $${HARBOUR_LIB_INCLUDE}/HarbourDebug.h \
     $${HARBOUR_LIB_INCLUDE}/HarbourImageProvider.h \
     $${HARBOUR_LIB_INCLUDE}/HarbourJson.h \
-    $${HARBOUR_LIB_INCLUDE}/HarbourSystemState.h \
-    $${HARBOUR_LIB_INCLUDE}/HarbourTheme.h \
-    $${HARBOUR_LIB_SRC}/HarbourMce.h
+    $${HARBOUR_LIB_INCLUDE}/HarbourTheme.h
 
 SOURCES += \
     $${HARBOUR_LIB_SRC}/HarbourImageProvider.cpp \
     $${HARBOUR_LIB_SRC}/HarbourJson.cpp \
-    $${HARBOUR_LIB_SRC}/HarbourMce.cpp \
-    $${HARBOUR_LIB_SRC}/HarbourSystemState.cpp \
     $${HARBOUR_LIB_SRC}/HarbourTheme.cpp
 
 # to disable building translations every time, comment out the

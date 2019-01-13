@@ -37,7 +37,6 @@
 #include "LinesPrefs.h"
 
 #include "HarbourImageProvider.h"
-#include "HarbourSystemState.h"
 #include "HarbourDebug.h"
 
 #include <QtGui>
@@ -84,7 +83,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     REGISTER(QuickLinesGame, "LinesGame");
     REGISTER(QuickNextBallsModel, "NextBallsModel");
     REGISTER(LinesPrefs, "LinesPrefs");
-    REGISTER(HarbourSystemState, "SystemState");
 
     QQuickView *view = SailfishApp::createView();
     QQmlContext* context = view->rootContext();

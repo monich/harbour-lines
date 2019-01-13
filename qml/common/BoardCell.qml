@@ -103,7 +103,7 @@ MouseArea {
     SequentialAnimation {
         id: jumpAnimation
         loops: Animation.Infinite
-        running: state == "SELECTED" && !globalSystemState.locked
+        running: state == "SELECTED" && Qt.application.active
         NumberAnimation {
             target: cell
             properties: "_size"
