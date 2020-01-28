@@ -48,7 +48,6 @@ OTHER_FILES += \
     qml/common/styles/shape/*.svg \
     qml/sailfish/*.qml \
     qml/sailfish/cover/*.qml \
-    qml/sailfish/images/*.svg \
     rpm/harbour-lines.changes \
     rpm/harbour-lines.spec \
     translations/*.ts

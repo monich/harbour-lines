@@ -1,20 +1,21 @@
 /*
-  Copyright (C) 2015 Jolla Ltd.
-  Contact: Slava Monich <slava.monich@jolla.com>
+  Copyright (C) 2015-2020 Jolla Ltd.
+  Copyright (C) 2015-2020 Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
   are met:
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Jolla Ltd nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
+    * Neither the names of the copyright holders nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -32,7 +33,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-MouseArea {
+Item {
     id: panel
 
     property var prefs
@@ -44,12 +45,14 @@ MouseArea {
         onBallStyleChanged: styleComboBox.updateCurrentStyle()
     }
 
-    Image {
+    Rectangle {
         anchors.fill: parent
-        sourceSize.width: width
-        sourceSize.height: height
-        fillMode: Image.PreserveAspectFit
-        source: "images/settings-bg.svg"
+        radius: width/22
+        color: "transparent"
+        border {
+            width: Math.max(1, Math.ceil(width/150))
+            color: Theme.primaryColor
+        }
     }
 
     SilicaFlickable {
@@ -62,6 +65,7 @@ MouseArea {
 
         Column {
             id: content
+
             width: parent.width
             anchors {
                 top: parent.top
@@ -70,6 +74,7 @@ MouseArea {
             }
             ComboBox {
                 id: styleComboBox
+
                 property bool _externalChange: false
 
                 function updateCurrentStyle() {
@@ -113,6 +118,7 @@ MouseArea {
                 label: qsTr("settings-style")
                 menu: ContextMenu {
                     id: styleMenu
+
                     x: 0
                     MenuItem {
                         text: qsTr("settings-style-ball")
@@ -140,6 +146,4 @@ MouseArea {
             }
         }
     }
-
-    onClicked: mouse.accepted = true
 }
