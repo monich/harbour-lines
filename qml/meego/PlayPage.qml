@@ -1,20 +1,21 @@
 /*
-  Copyright (C) 2015-2016 Jolla Ltd.
-  Contact: Slava Monich <slava.monich@jolla.com>
+  Copyright (C) 2015-2020 Jolla Ltd.
+  Copyright (C) 2015-2020 Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
   are met:
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of the Jolla Ltd nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
+    * Neither the names of the copyright holders nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -135,6 +136,15 @@ Item {
             Behavior on opacity { id: nextBallsOpacityBehavior }
         }
 
+        Label {
+            id: scoreLabel
+            anchors.left: scoreItem.left
+            text: qsTr("label-score")
+            font.pixelSize: theme.fontSizeExtraSmall
+            color: scoreItemText.color
+            opacity: 0.4
+        }
+
         MouseArea {
             id: scoreItem
             width: scoreItemText.implicitWidth
@@ -151,6 +161,15 @@ Item {
                 horizontalAlignment: Text.AlignLeft
             }
             onClicked: if (!settingsMode) newGameDialog.open()
+        }
+
+        Label {
+            id: highScoreLabel
+            anchors.right: highScoreItem.right
+            text: qsTr("label-high-score")
+            font.pixelSize: theme.fontSizeExtraSmall
+            color: highScoreItem.color
+            opacity: 0.4
         }
 
         Score {
@@ -198,12 +217,26 @@ Item {
             name: "PORTRAIT"
             when:  _portrait
             AnchorChanges {
+                target: scoreLabel
+                anchors {
+                    top: undefined
+                    bottom: scoreItem.top
+                }
+            }
+            AnchorChanges {
                 target: scoreItem
                 anchors {
                     top: undefined
                     left: board.left
                     bottom: board.top
                     right: undefined
+                }
+            }
+            AnchorChanges {
+                target: highScoreLabel
+                anchors {
+                    top: undefined
+                    bottom: highScoreItem.top
                 }
             }
             AnchorChanges {
@@ -227,12 +260,26 @@ Item {
             name: "LANDSCAPE"
             when: !_portrait
             AnchorChanges {
+                target: scoreLabel
+                anchors {
+                    top: scoreItem.bottom
+                    bottom: undefined
+                }
+            }
+            AnchorChanges {
                 target: scoreItem
                 anchors {
                     top: board.top
                     left: parent.left
                     bottom: undefined
                     right: board.left
+                }
+            }
+            AnchorChanges {
+                target: highScoreLabel
+                anchors {
+                    top: highScoreItem.bottom
+                    bottom: undefined
                 }
             }
             AnchorChanges {
