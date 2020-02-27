@@ -58,6 +58,7 @@ HARBOUR_LIB_REL = harbour-lib
 HARBOUR_LIB_DIR = $${_PRO_FILE_PWD_}/$${HARBOUR_LIB_REL}
 HARBOUR_LIB_INCLUDE = $${HARBOUR_LIB_DIR}/include
 HARBOUR_LIB_SRC = $${HARBOUR_LIB_DIR}/src
+HARBOUR_LIB_QML = $${HARBOUR_LIB_DIR}/qml
 
 INCLUDEPATH += \
     $${HARBOUR_LIB_DIR}/include
@@ -72,6 +73,15 @@ SOURCES += \
     $${HARBOUR_LIB_SRC}/HarbourImageProvider.cpp \
     $${HARBOUR_LIB_SRC}/HarbourJson.cpp \
     $${HARBOUR_LIB_SRC}/HarbourTheme.cpp
+
+HARBOUR_QML_COMPONENTS = \
+    $${HARBOUR_LIB_QML}/HarbourTextFlip.qml
+
+OTHER_FILES += $${HARBOUR_QML_COMPONENTS}
+
+qml_components.files = $${HARBOUR_QML_COMPONENTS}
+qml_components.path = /usr/share/$${TARGET}/qml/harbour
+INSTALLS += qml_components
 
 # Icons
 ICON_SIZES = 86 108 128 256

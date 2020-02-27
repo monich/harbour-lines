@@ -1,6 +1,6 @@
 /*
-  Copyright (C) 2015-2019 Jolla Ltd.
-  Copyright (C) 2015-2019 Slava Monich <slava.monich@jolla.com>
+  Copyright (C) 2015-2020 Jolla Ltd.
+  Copyright (C) 2015-2020 Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
 
@@ -35,6 +35,7 @@ import Sailfish.Silica 1.0
 import harbour.lines 1.0
 
 import "../common"
+import "../harbour"
 
 Page {
     id: page
@@ -45,8 +46,6 @@ Page {
     property bool _settingsMode
     property bool _portrait: page.orientation === Orientation.Portrait
     property string _highScore: (game && game.highScore) ? game.highScore : ""
-    property bool _firstScore: true
-    property int _displayedScore: 0
     property int _score: game ? game.score : 0
     property string _ballStyle: (game && game.prefs) ? game.prefs.ballStyle : "ball"
     property real cellSize: _portrait ?
@@ -54,22 +53,6 @@ Page {
                  (height - 4*theme.paddingLarge)/(Lines.Rows+2)) :
         Math.min((height - 2*theme.paddingLarge)/Lines.Rows,
                  (width - 4*theme.paddingLarge)/(Lines.Columns+2))
-
-    on_ScoreChanged: {
-        if (_firstScore) {
-            _firstScore = false
-            _displayedScore = _score
-        } else if (_displayedScore > _score) {
-            _displayedScore = _score
-        }
-    }
-
-    Timer {
-        running: _displayedScore < _score
-        interval: 50
-        repeat: true
-        onTriggered: if (_displayedScore < _score) _displayedScore += 1
-    }
 
     NextBallsModel {
         id: nextBallsModel
@@ -124,12 +107,33 @@ Page {
 
         Score {
             id: scoreItem
-            text: _displayedScore
             horizontalAlignment: Text.AlignLeft
             anchors {
                 bottomMargin: theme.paddingLarge
                 rightMargin: theme.paddingLarge
                 leftMargin: _portrait ? 0 : theme.paddingLarge
+            }
+            transform: HarbourTextFlip {
+                text: _score
+                target: scoreItem
+                readonly property bool flipping: animation.running
+                onFlippingChanged: if (!flipping && _score > _highScore) yey.start()
+            }
+            SequentialAnimation {
+                id: yey
+                alwaysRunToEnd: true
+                NumberAnimation {
+                    to: 1.4
+                    property: "scale"
+                    target: scoreItem
+                    duration: 75
+                }
+                NumberAnimation {
+                    to: 1.0
+                    property: "scale"
+                    target: scoreItem
+                    duration: 75
+                }
             }
         }
 
@@ -142,6 +146,10 @@ Page {
                 bottomMargin: theme.paddingLarge
                 leftMargin: theme.paddingLarge
                 rightMargin: _portrait ? 0 : theme.paddingLarge
+            }
+            transform: HarbourTextFlip {
+                text: _highScore
+                target: highScoreItem
             }
         }
 
