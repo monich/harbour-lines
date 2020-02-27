@@ -105,6 +105,15 @@ Page {
             Behavior on opacity { FadeAnimation {} }
         }
 
+        Label {
+            id: scoreLabel
+            anchors.left: scoreItem.left
+            text: qsTr("label-score")
+            font.pixelSize: Theme.fontSizeExtraSmall
+            color: scoreItem.color
+            opacity: 0.4
+        }
+
         Score {
             id: scoreItem
             horizontalAlignment: Text.AlignLeft
@@ -137,10 +146,19 @@ Page {
             }
         }
 
+        Label {
+            id: highScoreLabel
+            anchors.right: highScoreItem.right
+            text: qsTr("label-high-score")
+            font.pixelSize: Theme.fontSizeExtraSmall
+            color: highScoreItem.color
+            opacity: 0.4
+        }
+
         Score {
             id: highScoreItem
             text: _highScore
-            opacity: 0.5
+            color: Theme.secondaryColor
             horizontalAlignment: Text.AlignRight
             anchors {
                 bottomMargin: theme.paddingLarge
@@ -190,12 +208,26 @@ Page {
                 name: "PORTRAIT"
                 when:  _portrait
                 AnchorChanges {
+                    target: scoreLabel
+                    anchors {
+                        top: undefined
+                        bottom: scoreItem.top
+                    }
+                }
+                AnchorChanges {
                     target: scoreItem
                     anchors {
                         top: undefined
                         left: board.left
                         bottom: board.top
                         right: undefined
+                    }
+                }
+                AnchorChanges {
+                    target: highScoreLabel
+                    anchors {
+                        top: undefined
+                        bottom: highScoreItem.top
                     }
                 }
                 AnchorChanges {
@@ -219,12 +251,26 @@ Page {
                 name: "LANDSCAPE"
                 when: !_portrait
                 AnchorChanges {
+                    target: scoreLabel
+                    anchors {
+                        top: scoreItem.bottom
+                        bottom: undefined
+                    }
+                }
+                AnchorChanges {
                     target: scoreItem
                     anchors {
                         top: board.top
                         left: parent.left
                         bottom: undefined
                         right: board.left
+                    }
+                }
+                AnchorChanges {
+                    target: highScoreLabel
+                    anchors {
+                        top: highScoreItem.bottom
+                        bottom: undefined
                     }
                 }
                 AnchorChanges {

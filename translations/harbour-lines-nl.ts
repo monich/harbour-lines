@@ -30,6 +30,14 @@
         <source>new-game-reject</source>
         <translation>Nee</translation>
     </message>
+    <message>
+        <source>label-score</source>
+        <translation type="unfinished">Score</translation>
+    </message>
+    <message>
+        <source>label-high-score</source>
+        <translation type="unfinished">Hoogste score</translation>
+    </message>
 </context>
 <context>
     <name>SettingsPanel</name>

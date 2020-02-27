@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1">
+<TS version="2.1" language="ru">
 <context>
     <name>Board</name>
     <message>
@@ -29,6 +29,14 @@
     <message>
         <source>new-game-reject</source>
         <translation>Нет</translation>
+    </message>
+    <message>
+        <source>label-score</source>
+        <translation>Результат</translation>
+    </message>
+    <message>
+        <source>label-high-score</source>
+        <translation>Рекорд</translation>
     </message>
 </context>
 <context>

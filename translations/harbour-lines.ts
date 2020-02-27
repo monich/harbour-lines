@@ -30,6 +30,14 @@
         <source>new-game-reject</source>
         <translation>No</translation>
     </message>
+    <message>
+        <source>label-score</source>
+        <translation>Score</translation>
+    </message>
+    <message>
+        <source>label-high-score</source>
+        <translation>High score</translation>
+    </message>
 </context>
 <context>
     <name>SettingsPanel</name>
