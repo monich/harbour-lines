@@ -33,8 +33,15 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Item {
+Rectangle {
     id: panel
+
+    radius: width/22
+    color: "transparent"
+    border {
+        width: Math.max(1, Math.ceil(width/150))
+        color: Theme.primaryColor
+    }
 
     property var prefs
 
@@ -45,21 +52,11 @@ Item {
         onBallStyleChanged: styleComboBox.updateCurrentStyle()
     }
 
-    Rectangle {
-        anchors.fill: parent
-        radius: width/22
-        color: "transparent"
-        border {
-            width: Math.max(1, Math.ceil(width/150))
-            color: Theme.primaryColor
-        }
-    }
-
     SilicaFlickable {
         x: Theme.paddingLarge
-        width: parent.width - 2*Theme.paddingLarge
-        height: parent.height
-        anchors.centerIn: parent
+        y: parent.border.width
+        width: parent.width - 2*x
+        height: parent.height - 2*y
         contentHeight: content.height
         clip: true
 
