@@ -32,8 +32,7 @@ SOURCES += \
     src/QuickLinesColors.cpp \
     src/QuickLinesGame.cpp \
     src/QuickLinesModel.cpp \
-    src/QuickNextBallsModel.cpp \
-    src/SystemState.cpp
+    src/QuickNextBallsModel.cpp
 
 HEADERS += \
     src/LinesBalls.h \
@@ -48,8 +47,7 @@ HEADERS += \
     src/QuickLinesColors.h \
     src/QuickLinesGame.h \
     src/QuickLinesModel.h \
-    src/QuickNextBallsModel.h \
-    src/SystemState.h
+    src/QuickNextBallsModel.h
 
 OTHER_FILES += \
     meego/* \
@@ -69,6 +67,23 @@ OTHER_FILES += \
     qtc_packaging/debian_harmattan/control \
     qtc_packaging/debian_harmattan/compat \
     qtc_packaging/debian_harmattan/changelog
+
+# harbour-lib
+
+HARBOUR_LIB_REL = harbour-lib
+HARBOUR_LIB_DIR = $${_PRO_FILE_PWD_}/$${HARBOUR_LIB_REL}
+HARBOUR_LIB_INCLUDE = $${HARBOUR_LIB_DIR}/include
+HARBOUR_LIB_SRC = $${HARBOUR_LIB_DIR}/src
+
+INCLUDEPATH += \
+    $${HARBOUR_LIB_DIR}/include
+
+HEADERS += \
+    $${HARBOUR_LIB_INCLUDE}/HarbourDebug.h \
+    $${HARBOUR_LIB_INCLUDE}/HarbourJson.h \
+
+SOURCES += \
+    $${HARBOUR_LIB_SRC}/HarbourJson.cpp \
 
 # Translations
 TR_DIR = $$_PRO_FILE_PWD_/translations

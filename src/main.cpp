@@ -36,7 +36,6 @@
 #include "QuickNextBallsModel.h"
 #include "LinesPrefs.h"
 
-#include "HarbourImageProvider.h"
 #include "HarbourDebug.h"
 
 #include <QtGui>
@@ -54,6 +53,7 @@
 #define MAIN_QML "qml/meego/main.qml"
 #else
 #include <sailfishapp.h>
+#include "HarbourImageProvider.h"
 #define loadTranslations(translator,locale,filename,prefix,directory) \
     ((translator)->load(locale,filename,prefix,directory))
 #define MAIN_QML "qml/sailfish/main.qml"
@@ -85,12 +85,15 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     REGISTER(LinesPrefs, "LinesPrefs");
 
     QQuickView *view = SailfishApp::createView();
+
+#ifndef HARMATTAN
     QQmlContext* context = view->rootContext();
     QQmlEngine* engine = context->engine();
 
     QString imageProvider("harbour");
     context->setContextProperty("HarbourImageProvider", imageProvider);
     engine->addImageProvider(imageProvider, new HarbourImageProvider);
+#endif
 
     view->setSource(SailfishApp::pathTo(MAIN_QML));
     view->show();
