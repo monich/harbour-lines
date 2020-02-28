@@ -79,6 +79,7 @@ Page {
             game: page.game
             opacity: _settingsMode ? 0 : 1
             visible: opacity > 0
+            source: HarbourTheme.darkOnLight ? Qt.resolvedUrl("images/board-light.svg") : Qt.resolvedUrl("../common/images/board.svg")
             Behavior on opacity { FadeAnimation {} }
         }
 

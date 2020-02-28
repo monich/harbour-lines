@@ -54,12 +54,15 @@
 #else
 #include <sailfishapp.h>
 #include "HarbourImageProvider.h"
+#include "HarbourTheme.h"
 #define loadTranslations(translator,locale,filename,prefix,directory) \
     ((translator)->load(locale,filename,prefix,directory))
 #define MAIN_QML "qml/sailfish/main.qml"
 #endif
 
 #define REGISTER(type,name) qmlRegisterType<type>(LINES_PLUGIN,1,0,name)
+#define REGISTER_SINGLETON(type,name) \
+    qmlRegisterSingletonType<type>(LINES_PLUGIN,1,0,name,type::createSingleton)
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -93,6 +96,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QString imageProvider("harbour");
     context->setContextProperty("HarbourImageProvider", imageProvider);
     engine->addImageProvider(imageProvider, new HarbourImageProvider);
+    REGISTER_SINGLETON(HarbourTheme, "HarbourTheme");
 #endif
 
     view->setSource(SailfishApp::pathTo(MAIN_QML));
