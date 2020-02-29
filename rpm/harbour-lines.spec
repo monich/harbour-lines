@@ -1,6 +1,6 @@
 Name:       harbour-lines
 Summary:    Lines game
-Version:    1.0.4
+Version:    1.0.5
 Release:    1
 Group:      Amusements/Games
 License:    BSD
@@ -49,6 +49,10 @@ desktop-file-install --delete-original \
 %exclude %{_datadir}/%{name}/qml/meego
 
 %changelog
+* Sun Mar 1 2020 Slava Monich <slava.monich@jolla.com> 1.0.5
+- Changed score animations (again)
+- Update high scores when game is restarted
+
 * Sat Feb 29 2020 Slava Monich <slava.monich@jolla.com> 1.0.4
 - Added score table
 
