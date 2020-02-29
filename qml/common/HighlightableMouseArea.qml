@@ -1,6 +1,6 @@
 /*
-  Copyright (C) 2015-2020 Jolla Ltd.
-  Copyright (C) 2015-2020 Slava Monich <slava.monich@jolla.com>
+  Copyright (C) 2020 Jolla Ltd.
+  Copyright (C) 2020 Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
 
@@ -30,25 +30,22 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import QtQuick 1.1
-import com.nokia.meego 1.0
+//import QtQuick 1.1  // Harmattan
+import QtQuick 2.0  // Sailfish
 
-QtObject {
-    property real fontSizeTiny: 20
-    property real fontSizeExtraSmall: 24
-    property real fontSizeSmall: 28
-    property real fontSizeMedium: 32
-    property real fontSizeLarge: 40
-    property real fontSizeExtraLarge: 50
-    property real fontSizeHuge: 64
+MouseArea {
+    id: button
 
-    property real paddingSmall: 6
-    property real paddingMedium: 12
-    property real paddingLarge: 24
+    property variant theme
+    property bool highlighted: (pressed && containsMouse) || pressTimer.running
 
-    property int minimumPressHighlightTime: 64
+    onPressedChanged: if (pressed) pressTimer.start()
 
-    property variant opacityAnimation: Component {
-        NumberAnimation { duration: 100; easing.type: Easing.InOutQuad }
+    onCanceled: pressTimer.stop()
+
+    Timer {
+        id: pressTimer
+
+        interval: theme.minimumPressHighlightTime
     }
 }

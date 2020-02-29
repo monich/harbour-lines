@@ -1,6 +1,6 @@
 /*
-  Copyright (C) 2015-2019 Jolla Ltd.
-  Copyright (C) 2015-2019 Slava Monich <slava.monich@jolla.com>
+  Copyright (C) 2015-2020 Jolla Ltd.
+  Copyright (C) 2015-2020 Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
 
@@ -34,6 +34,7 @@
 #include "QuickLinesModel.h"
 #include "QuickLinesGame.h"
 #include "QuickNextBallsModel.h"
+#include "QuickScoresModel.h"
 #include "LinesPrefs.h"
 
 #include "HarbourDebug.h"
@@ -85,6 +86,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     REGISTER(QuickLinesModel, "LinesModel");
     REGISTER(QuickLinesGame, "LinesGame");
     REGISTER(QuickNextBallsModel, "NextBallsModel");
+    REGISTER(QuickScoresModel, "ScoresModel");
     REGISTER(LinesPrefs, "LinesPrefs");
 
     QQuickView *view = SailfishApp::createView();

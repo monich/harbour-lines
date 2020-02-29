@@ -40,13 +40,17 @@ Item {
     property variant game
     property variant theme
 
+    property int kModeGame: 0
+    property int kModeScores: 1
+    property int kModeSettings: 2
+    property int _mode: kModeGame
+
     property bool _portrait: window.inPortrait
     property string _highScore: (game && game.highScore) ? game.highScore : ""
     property bool _firstScore: true
     property int _displayedScore: 0
     property int score: game ? game.score : 0
     property string _ballStyle: (game && game.prefs) ? game.prefs.ballStyle : "ball"
-    property bool settingsMode
     property real cellSize
 
     function updateCellSize() {
@@ -107,7 +111,7 @@ Item {
             width: cellSize * Lines.Columns
             height: cellSize * Lines.Rows
             game: page.game
-            opacity: settingsMode ? 0 : 1
+            opacity: (_mode === kModeGame) ? 1 : 0
             visible: opacity > 0
             Behavior on opacity { id: boardOpacityBehavior }
             onGameOverPanelClicked: newGameDialog.open()
@@ -160,7 +164,7 @@ Item {
                 text: _displayedScore
                 horizontalAlignment: Text.AlignLeft
             }
-            onClicked: if (!settingsMode) newGameDialog.open()
+            onClicked: if (_mode === kModeGame) newGameDialog.open()
         }
 
         Label {
@@ -170,6 +174,8 @@ Item {
             font.pixelSize: theme.fontSizeExtraSmall
             color: highScoreItem.color
             opacity: 0.4
+            property real xright: x + width
+            property real ybottom: y + height
         }
 
         Score {
@@ -183,6 +189,20 @@ Item {
                 leftMargin: theme.paddingLarge
                 rightMargin: _portrait ? 0 : theme.paddingLarge
             }
+            property real xright: x + width
+            property real ybottom: y + height
+        }
+
+        MouseArea {
+            id: highScoreMouseArea
+            x: Math.min(highScoreItem.x, highScoreLabel.x)
+            y: Math.min(highScoreItem.y, highScoreLabel.y)
+            width: xright - x
+            height: ybottom - y
+            visible: highScoreItem.visible
+            property real xright: Math.max(highScoreItem.xright, highScoreLabel.xright)
+            property real ybottom: Math.max(highScoreItem.ybottom, highScoreLabel.ybottom)
+            onClicked: _mode = (_mode === kModeScores) ? kModeGame : kModeScores
         }
 
         SettingsPanel {
@@ -194,21 +214,29 @@ Item {
             width: board.width
             height: board.height
             visible: opacity > 0
-            opacity: settingsMode ? 1 : 0
+            opacity: (_mode === kModeSettings) ? 1 : 0
             Behavior on opacity { id: settingsPanelOpacityBehavior }
+        }
+
+        ScoresPanel {
+            game: page.game
+            theme: page.theme
+            anchors.fill: board
+            visible: opacity > 0
+            opacity: (_mode === kModeScores) ? 1 : 0
         }
 
         SettingsButton {
             theme: page.theme
             width: cellSize
             height: width
-            ok: settingsMode
+            ok: _mode !== kModeGame
             anchors {
                 bottom: parent.bottom
                 right: parent.right
                 margins: theme.paddingLarge
             }
-            onButtonClicked: settingsMode = !settingsMode
+            onButtonClicked: _mode = (ok ? kModeGame : kModeSettings)
         }
     }
 

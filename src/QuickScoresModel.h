@@ -1,6 +1,6 @@
 /*
-  Copyright (C) 2015-2020 Jolla Ltd.
-  Copyright (C) 2015-2020 Slava Monich <slava.monich@jolla.com>
+  Copyright (C) 2020 Jolla Ltd.
+  Copyright (C) 2020 Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
 
@@ -30,25 +30,43 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import QtQuick 1.1
-import com.nokia.meego 1.0
+#ifndef QUICK_SCORES_MODEL_H
+#define QUICK_SCORES_MODEL_H
 
-QtObject {
-    property real fontSizeTiny: 20
-    property real fontSizeExtraSmall: 24
-    property real fontSizeSmall: 28
-    property real fontSizeMedium: 32
-    property real fontSizeLarge: 40
-    property real fontSizeExtraLarge: 50
-    property real fontSizeHuge: 64
+#include "QuickLinesGame.h"
+#include <QAbstractListModel>
 
-    property real paddingSmall: 6
-    property real paddingMedium: 12
-    property real paddingLarge: 24
+class QuickScoresModel: public QAbstractListModel
+{
+    Q_OBJECT
+    Q_PROPERTY(QuickLinesGame* game READ game WRITE setGame NOTIFY gameChanged)
 
-    property int minimumPressHighlightTime: 64
+public:
+    explicit QuickScoresModel(QObject* aParent = NULL);
+    ~QuickScoresModel();
 
-    property variant opacityAnimation: Component {
-        NumberAnimation { duration: 100; easing.type: Easing.InOutQuad }
-    }
-}
+    QuickLinesGame* game() const { return iGame; }
+    void setGame(QuickLinesGame* aGame);
+
+    virtual QHash<int,QByteArray> roleNames() const;
+    virtual int rowCount(const QModelIndex& aParent) const;
+    virtual QVariant data(const QModelIndex& aIndex, int aRole) const;
+
+private Q_SLOTS:
+    void updateState();
+    void onGameDestroyed();
+
+private:
+    int currentScoreIndex() const;
+
+Q_SIGNALS:
+    void gameChanged();
+
+private:
+    QuickLinesGame* iGame;
+    int iCurrentScoreIndex;
+};
+
+QML_DECLARE_TYPE(QuickScoresModel)
+
+#endif // QUICK_SCORES_MODEL_H

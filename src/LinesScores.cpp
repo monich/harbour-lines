@@ -1,6 +1,6 @@
 /*
-  Copyright (C) 2015-2019 Jolla Ltd.
-  Copyright (C) 2015-2019 Slava Monich <slava.monich@jolla.com>
+  Copyright (C) 2015-2020 Jolla Ltd.
+  Copyright (C) 2015-2020 Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
 
@@ -35,9 +35,6 @@
 #include "HarbourDebug.h"
 
 #include <QVariantList>
-#include <QDateTime>
-
-#define LINES_SCORES_MAX_COUNT (10)
 
 /* JSON keys */
 #define LINES_SCORES_JSON_VERSION (1)
@@ -50,37 +47,40 @@ static QString kJsonScoreTimestamp("timestamp");
 // LinesScore
 //===========================================================================
 
-class LinesScore {
-public:
-    LinesScore(int aValue) :
-        iValue(aValue),
-        iTimestamp(QDateTime::currentDateTime()) {}
-    LinesScore(int aValue, const QDateTime &aTimestamp) :
-        iValue(aValue),
-        iTimestamp(aTimestamp) {}
+LinesScore::LinesScore(int aValue) :
+    iValue(aValue),
+    iTimestamp(QDateTime::currentDateTime())
+{
+}
 
-    QVariantMap toVariantMap() const {
-        QVariantMap map;
-        map.insert(kJsonScoreValue, iValue);
-        map.insert(kJsonScoreTimestamp,
-            iTimestamp.toUTC().toString(Qt::ISODate));
-        return map;
-    }
+LinesScore::LinesScore(int aValue, const QDateTime &aTimestamp) :
+    iValue(aValue),
+    iTimestamp(aTimestamp)
+{
+}
 
-public:
-    int iValue;
-    QDateTime iTimestamp;
-};
+QVariantMap LinesScore::toVariantMap() const
+{
+    QVariantMap map;
+    map.insert(kJsonScoreValue, iValue);
+    map.insert(kJsonScoreTimestamp,
+        iTimestamp.toUTC().toString(Qt::ISODate));
+    return map;
+}
 
-static bool scoreLessThan(LinesScore* aScore1, LinesScore* aScore2)
+bool LinesScore::lessThan(LinesScore* aScore1, LinesScore* aScore2)
 {
     // We are sorting in descending order
-    return aScore1->iValue > aScore2->iValue;
+    return aScore1->iValue > aScore2->iValue ||
+        (aScore1->iValue == aScore2->iValue &&
+         aScore1->iTimestamp > aScore2->iTimestamp);
 }
 
 //===========================================================================
 // LinesScores
 //===========================================================================
+
+const int LinesScores::MAX_COUNT = 10;
 
 LinesScores::LinesScores(QVariantMap* aMap)
 {
@@ -133,22 +133,34 @@ int LinesScores::highScore() const
     return (iScores.count() > 0) ? iScores.at(0)->iValue : 0;
 }
 
-bool LinesScores::addHighScore(int aScore)
+int LinesScores::minScore() const
 {
-    if (aScore > highScore()) {
-        HDEBUG("new high score" << aScore);
-        iScores.append(new LinesScore(aScore));
-        normalize();
-        HASSERT(highScore() == aScore);
-        return true;
+    return (iScores.count() > 0) ? iScores.last()->iValue : 0;
+}
+
+bool LinesScores::addScore(int aScore)
+{
+    if (aScore > 0) {
+        const int n = iScores.count();
+        if (n < MAX_COUNT || aScore >= minScore()) {
+            HDEBUG("new score" << aScore);
+            iScores.append(new LinesScore(aScore));
+            normalize();
+            return true;
+        }
     }
     return false;
 }
 
 void LinesScores::normalize()
 {
-    qSort(iScores.begin(), iScores.end(), scoreLessThan);
-    while (iScores.count() > LINES_SCORES_MAX_COUNT) {
+    qSort(iScores.begin(), iScores.end(), LinesScore::lessThan);
+    while (iScores.count() > MAX_COUNT) {
         delete iScores.takeLast();
     }
+}
+
+const LinesScore* LinesScores::scoreAt(int aIndex) const
+{
+    return (aIndex >= 0 && aIndex < count()) ? iScores.at(aIndex) : NULL;
 }

@@ -1,6 +1,6 @@
 /*
-  Copyright (C) 2015-2019 Jolla Ltd.
-  Copyright (C) 2015-2019 Slava Monich <slava.monich@jolla.com>
+  Copyright (C) 2015-2020 Jolla Ltd.
+  Copyright (C) 2015-2020 Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
 
@@ -33,10 +33,10 @@
 //import QtQuick 1.1  // Harmattan
 import QtQuick 2.0  // Sailfish
 
-MouseArea {
+HighlightableMouseArea {
     id: button
+
     property bool ok
-    property variant theme
     property string imagePrefix
     property string imageSuffix
 

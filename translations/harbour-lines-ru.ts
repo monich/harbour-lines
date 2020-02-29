@@ -40,6 +40,17 @@
     </message>
 </context>
 <context>
+    <name>ScoresPanel</name>
+    <message>
+        <source>scores-title</source>
+        <translation>Результаты</translation>
+    </message>
+    <message>
+        <source>scores-current-score</source>
+        <translation>Текущий результат</translation>
+    </message>
+</context>
+<context>
     <name>SettingsPanel</name>
     <message>
         <source>settings-style</source>

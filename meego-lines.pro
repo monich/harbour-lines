@@ -32,7 +32,8 @@ SOURCES += \
     src/QuickLinesColors.cpp \
     src/QuickLinesGame.cpp \
     src/QuickLinesModel.cpp \
-    src/QuickNextBallsModel.cpp
+    src/QuickNextBallsModel.cpp \
+    src/QuickScoresModel.cpp
 
 HEADERS += \
     src/LinesBalls.h \
@@ -47,7 +48,8 @@ HEADERS += \
     src/QuickLinesColors.h \
     src/QuickLinesGame.h \
     src/QuickLinesModel.h \
-    src/QuickNextBallsModel.h
+    src/QuickNextBallsModel.h \
+    src/QuickScoresModel.h
 
 OTHER_FILES += \
     meego/* \

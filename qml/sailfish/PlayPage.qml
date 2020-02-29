@@ -43,7 +43,11 @@ Page {
     property variant game
     property variant theme
 
-    property bool _settingsMode
+    readonly property int kModeGame: 0
+    readonly property int kModeScores: 1
+    readonly property int kModeSettings: 2
+    property int _mode: kModeGame
+
     property bool _portrait: page.orientation === Orientation.Portrait
     property string _highScore: (game && game.highScore) ? game.highScore : ""
     property int _score: game ? game.score : 0
@@ -77,7 +81,7 @@ Page {
             width: cellSize * Lines.Columns
             height: cellSize * Lines.Rows
             game: page.game
-            opacity: _settingsMode ? 0 : 1
+            opacity: (_mode === kModeGame) ? 1 : 0
             visible: opacity > 0
             source: HarbourTheme.darkOnLight ? Qt.resolvedUrl("images/board-light.svg") : Qt.resolvedUrl("../common/images/board.svg")
             Behavior on opacity { FadeAnimation {} }
@@ -117,11 +121,9 @@ Page {
 
         Score {
             id: scoreItem
-            horizontalAlignment: Text.AlignLeft
             anchors {
-                bottomMargin: theme.paddingLarge
-                rightMargin: theme.paddingLarge
-                leftMargin: _portrait ? 0 : theme.paddingLarge
+                bottomMargin: Theme.paddingLarge
+                leftMargin: _portrait ? 0 : Theme.paddingLarge
             }
             transform: HarbourTextFlip {
                 text: _score
@@ -153,23 +155,31 @@ Page {
             text: qsTr("label-high-score")
             font.pixelSize: Theme.fontSizeExtraSmall
             color: highScoreItem.color
-            opacity: 0.4
+            visible: opacity > 0
+            opacity: _highScore ? 0.4 : 0
+            readonly property real xright: x + width
+            readonly property real ybottom: y + height
+            Behavior on opacity { FadeAnimation {} }
         }
 
         Score {
             id: highScoreItem
             text: _highScore
-            color: Theme.secondaryColor
+            color: highScoreMouseArea.highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor
+            visible: opacity > 0
+            opacity: _highScore ? 1 : 0
             horizontalAlignment: Text.AlignRight
             anchors {
                 bottomMargin: theme.paddingLarge
-                leftMargin: theme.paddingLarge
                 rightMargin: _portrait ? 0 : theme.paddingLarge
             }
             transform: HarbourTextFlip {
                 text: _highScore
                 target: highScoreItem
             }
+            readonly property real xright: x + width
+            readonly property real ybottom: y + height
+            Behavior on opacity { FadeAnimation {} }
         }
 
         PulleyAnimationHint {
@@ -180,28 +190,46 @@ Page {
 
         SettingsPanel {
             prefs: game.prefs
-            x: board.x
-            y: board.y
-            width: board.width
-            height: board.height
+            anchors.fill: board
             visible: opacity > 0
-            opacity: _settingsMode ? 1 : 0
+            opacity: (_mode === kModeSettings) ? 1 : 0
             Behavior on opacity { FadeAnimation {} }
+        }
+
+        ScoresPanel {
+            game: page.game
+            anchors.fill: board
+            visible: opacity > 0
+            opacity: (_mode === kModeScores) ? 1 : 0
+            Behavior on opacity { FadeAnimation {} }
+        }
+
+        HighlightableMouseArea {
+            id: highScoreMouseArea
+            x: Math.min(highScoreItem.x, highScoreLabel.x)
+            y: Math.min(highScoreItem.y, highScoreLabel.y)
+            width: xright - x
+            height: ybottom - y
+            visible: highScoreItem.visible
+            theme: page.theme
+            readonly property real xright: Math.max(highScoreItem.xright, highScoreLabel.xright)
+            readonly property real ybottom: Math.max(highScoreItem.ybottom, highScoreLabel.ybottom)
+            onClicked: _mode = (_mode === kModeScores) ? kModeGame : kModeScores
         }
 
         SettingsButton {
             theme: page.theme
             width: cellSize
             height: width
-            ok: _settingsMode
+            ok: _mode !== kModeGame
             imagePrefix: "image://" + HarbourImageProvider + "/"
-            imageSuffix: "?" + Theme.primaryColor
+            imageSuffix: "?" + (highlighted ? Theme.highlightColor : Theme.primaryColor)
             anchors {
                 bottom: parent.bottom
                 right: parent.right
                 margins: theme.paddingLarge
             }
-            onButtonClicked: _settingsMode = !_settingsMode
+            onButtonClicked: _mode = (ok ? kModeGame : kModeSettings)
         }
 
         states: [
@@ -264,7 +292,7 @@ Page {
                         top: board.top
                         left: parent.left
                         bottom: undefined
-                        right: board.left
+                        right: undefined
                     }
                 }
                 AnchorChanges {
@@ -278,7 +306,7 @@ Page {
                     target: highScoreItem
                     anchors {
                         top: board.top
-                        left: board.right
+                        left: undefined
                         right: parent.right
                         bottom: undefined
                     }

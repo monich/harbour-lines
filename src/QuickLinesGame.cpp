@@ -1,6 +1,6 @@
 /*
-  Copyright (C) 2015-2019 Jolla Ltd.
-  Copyright (C) 2015-2019 Slava Monich <slava.monich@jolla.com>
+  Copyright (C) 2015-2020 Jolla Ltd.
+  Copyright (C) 2015-2020 Slava Monich <slava.monich@jolla.com>
 
   You may use this file under the terms of BSD license as follows:
 
@@ -63,6 +63,13 @@ QuickLinesGame::QuickLinesGame(QObject* aParent) :
 QuickLinesGame::~QuickLinesGame()
 {
     HDEBUG((void*)this << "- destroyed");
+    if (iState && !iState->hasEmptyCells()) {
+        HDEBUG("ending the game");
+        if (iScores->addScore(score())) {
+            saveScores();
+        }
+        setState(NULL);
+    }
     delete iState;
     delete iScores;
 }
@@ -84,7 +91,7 @@ int QuickLinesGame::highScore() const
 
 bool QuickLinesGame::newRecord() const
 {
-    return score() > iScores->highScore();
+    return score() >= iScores->highScore();
 }
 
 void QuickLinesGame::setPrefs(LinesPrefs* aPrefs)
@@ -170,6 +177,9 @@ LinesPoints QuickLinesGame::moveBall(LinesPoint aFrom, LinesPoint aTo)
 
 void QuickLinesGame::restart()
 {
+    if (iScores->addScore(score())) {
+        saveScores();
+    }
     setState(NULL);
     setState(new LinesState(NULL));
 }
@@ -187,17 +197,14 @@ void QuickLinesGame::setState(LinesState* aState)
         if (iState && iPrefs && iPrefs->showNextBalls()) {
             iState->nextColorsShown();
         }
+
         saveState();
+
         Q_EMIT stateChanged(prevState, iState);
 
-        const int newScore = score();
-        if (prevScore != newScore) {
-            HDEBUG("score" << newScore);
+        if (prevScore != score()) {
+            HDEBUG("score" << score());
             Q_EMIT scoreChanged();
-            if (prevScore > newScore && iScores->addHighScore(prevScore)) {
-                // Record the last score
-                saveScores();
-            }
         }
 
         if (wasNewRecord != newRecord()) {
@@ -209,6 +216,11 @@ void QuickLinesGame::setState(LinesState* aState)
         }
 
         if (wasOver != over()) {
+#if HARBOUR_DEBUG
+            if (!wasOver) {
+                HDEBUG("Game is over");
+            }
+#endif
             Q_EMIT overChanged();
         }
 
