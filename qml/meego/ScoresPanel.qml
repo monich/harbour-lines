@@ -76,7 +76,7 @@ Image {
             }
         }
         delegate: Item {
-            height: Math.max(scoreLabel.height, arrowLabel.height, currentScoreLabel.height, dateAndTimeLabel.height) + theme.paddingMedium
+            height: Math.max(scoreLabel.height, arrowLabel.height, currentScoreLabel.height, dateAndTimeLabel.height) + theme.paddingSmall
             width: list.width
             property real xSplit: Math.round(parent.width/4)
             Label {
