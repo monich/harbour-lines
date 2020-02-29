@@ -177,8 +177,12 @@ LinesPoints QuickLinesGame::moveBall(LinesPoint aFrom, LinesPoint aTo)
 
 void QuickLinesGame::restart()
 {
+    const int prevHighScore = highScore();
     if (iScores->addScore(score())) {
         saveScores();
+    }
+    if (prevHighScore != highScore()) {
+        Q_EMIT highScoreChanged();
     }
     setState(NULL);
     setState(new LinesState(NULL));
