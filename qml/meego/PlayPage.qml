@@ -164,7 +164,7 @@ Item {
                 text: _displayedScore
                 horizontalAlignment: Text.AlignLeft
             }
-            onClicked: if (_mode === kModeGame) newGameDialog.open()
+            onClicked: if (_mode !== kModeSettings) newGameDialog.open()
         }
 
         Label {
@@ -173,6 +173,7 @@ Item {
             text: qsTr("label-high-score")
             font.pixelSize: theme.fontSizeExtraSmall
             color: highScoreItem.color
+            visible: highScoreItem.visible
             opacity: 0.4
             property real xright: x + width
             property real ybottom: y + height
@@ -182,7 +183,8 @@ Item {
             id: highScoreItem
             theme: page.theme
             text: _highScore
-            opacity: 0.5
+            visible: _highScore > 0
+            opacity: 0.6
             horizontalAlignment: Text.AlignRight
             anchors {
                 bottomMargin: theme.paddingLarge
