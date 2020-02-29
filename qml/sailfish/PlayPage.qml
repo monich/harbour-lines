@@ -63,6 +63,8 @@ Page {
         game: page.game
     }
 
+    Component.onCompleted: scoreItem.displayedScore = _score
+
     SilicaFlickable {
         anchors.fill: parent
 
@@ -121,30 +123,40 @@ Page {
 
         Score {
             id: scoreItem
+            text: displayedScore
             anchors {
                 bottomMargin: Theme.paddingLarge
                 leftMargin: _portrait ? 0 : Theme.paddingLarge
             }
             transform: HarbourTextFlip {
-                text: _score
+                id: scoreItemFlip
+                property: "displayedScore"
                 target: scoreItem
-                readonly property bool flipping: animation.running
-                onFlippingChanged: if (!flipping && _score > _highScore) yey.start()
+            }
+            property int displayedScore: 0
+            readonly property int realScore: _score
+            onRealScoreChanged: if (displayedScore > _score) scoreItemFlip.flipTo(_score) // Flip down
+            Timer {
+                running: scoreItem.displayedScore < _score // Count up
+                interval: 50
+                repeat: true
+                onTriggered: if (scoreItem.displayedScore < _score) scoreItem.displayedScore++
+                onRunningChanged: if (!running && _score > _highScore) yey.start()
             }
             SequentialAnimation {
                 id: yey
                 alwaysRunToEnd: true
                 NumberAnimation {
-                    to: 1.4
+                    to: 1.5
                     property: "scale"
                     target: scoreItem
-                    duration: 75
+                    duration: 100
                 }
                 NumberAnimation {
                     to: 1.0
                     property: "scale"
                     target: scoreItem
-                    duration: 75
+                    duration: 100
                 }
             }
         }
@@ -164,7 +176,6 @@ Page {
 
         Score {
             id: highScoreItem
-            text: _highScore
             color: highScoreMouseArea.highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor
             visible: opacity > 0
             opacity: _highScore ? 1 : 0
@@ -174,6 +185,7 @@ Page {
                 rightMargin: _portrait ? 0 : theme.paddingLarge
             }
             transform: HarbourTextFlip {
+                enabled: highScoreItem.text !== ""
                 text: _highScore
                 target: highScoreItem
             }
