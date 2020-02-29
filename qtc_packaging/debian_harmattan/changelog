@@ -1,9 +1,9 @@
-meego-lines (1.0.4) unstable; urgency=low
+meego-lines (1.0.5) unstable; urgency=low
 
    * Added Dutch translation
    * Added score table
 
- -- Slava Monich <slava.monich@jolla.com>  Sat, 29 Feb 2020 19:36:55 +0200
+ -- Slava Monich <slava.monich@jolla.com>  Sun, 01 Mar 2020 00:37:14 +0200
 
 meego-lines (1.0.2) unstable; urgency=low
 
