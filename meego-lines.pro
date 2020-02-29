@@ -100,6 +100,15 @@ lrelease_en.CONFIG = no_link
 lrelease_en.variable_out = PRE_TARGETDEPS
 QMAKE_EXTRA_COMPILERS += lrelease_en
 
+TR_NL_QM = meego-lines-nl.qm
+TR_NL_TS = $$TR_DIR/harbour-lines-nl.ts
+lrelease_nl.input = TR_NL_TS
+lrelease_nl.output = $$TR_DIR/$$TR_NL_QM
+lrelease_nl.commands = $$LRELEASE $$TR_NL_TS -qm $$TR_DIR/$$TR_NL_QM
+lrelease_nl.CONFIG = no_link
+lrelease_nl.variable_out = PRE_TARGETDEPS
+QMAKE_EXTRA_COMPILERS += lrelease_nl
+
 TR_RU_QM = meego-lines-ru.qm
 TR_RU_TS = $$TR_DIR/harbour-lines-ru.ts
 lrelease_ru.input = TR_RU_TS
@@ -117,7 +126,9 @@ translation_en.files = translations/$$TR_EN_QM
 translation_en.path = $$TR_DEPLOY
 translation_ru.files = translations/$$TR_RU_QM
 translation_ru.path = $$TR_DEPLOY
-INSTALLS += translation_en translation_ru
+translation_nl.files = translations/$$TR_NL_QM
+translation_nl.path = $$TR_DEPLOY
+INSTALLS += translation_en translation_nl translation_ru
 
 qml_common.files = qml/common
 qml_common.path = $$INSTALL_PREFIX/qml
