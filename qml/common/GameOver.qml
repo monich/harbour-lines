@@ -30,8 +30,8 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-//import QtQuick 1.1  // Harmattan
-import QtQuick 2.0  // Sailfish
+import QtQuick 1.1  // Harmattan
+//import QtQuick 2.0  // Sailfish
 
 MouseArea {
     id: panel
