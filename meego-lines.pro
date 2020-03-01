@@ -37,7 +37,6 @@ SOURCES += \
 
 HEADERS += \
     src/LinesBalls.h \
-    src/LinesDebug.h \
     src/LinesScores.h \
     src/LinesSet.h \
     src/LinesState.h \
