@@ -102,4 +102,5 @@ CONFIG += sailfishapp_i18n
 TRANSLATIONS += \
     translations/harbour-lines.ts \
     translations/harbour-lines-nl.ts \
-    translations/harbour-lines-ru.ts
+    translations/harbour-lines-ru.ts \
+    translations/harbour-lines-sv.ts
