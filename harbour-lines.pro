@@ -1,7 +1,7 @@
 TARGET = harbour-lines
 CONFIG += link_pkgconfig
 CONFIG += sailfishapp
-PKGCONFIG += glib-2.0 gio-2.0 mlite5
+PKGCONFIG += glib-2.0 mlite5
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-psabi
 QT += qml quick
 LIBS += -ldl
@@ -70,11 +70,13 @@ HEADERS += \
     $${HARBOUR_LIB_INCLUDE}/HarbourDebug.h \
     $${HARBOUR_LIB_INCLUDE}/HarbourImageProvider.h \
     $${HARBOUR_LIB_INCLUDE}/HarbourJson.h \
+    $${HARBOUR_LIB_INCLUDE}/HarbourSystem.h \
     $${HARBOUR_LIB_INCLUDE}/HarbourTheme.h
 
 SOURCES += \
     $${HARBOUR_LIB_SRC}/HarbourImageProvider.cpp \
     $${HARBOUR_LIB_SRC}/HarbourJson.cpp \
+    $${HARBOUR_LIB_SRC}/HarbourSystem.cpp \
     $${HARBOUR_LIB_SRC}/HarbourTheme.cpp
 
 HARBOUR_QML_COMPONENTS = \
