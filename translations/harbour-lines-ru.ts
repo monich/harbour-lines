@@ -62,7 +62,7 @@
     </message>
     <message>
         <source>settings-style-shape</source>
-        <translation>Цветные фигурки    </translation>
+        <translation>Цветные фигурки</translation>
     </message>
     <message>
         <source>settings-show-next-switch</source>
