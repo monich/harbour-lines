@@ -41,6 +41,7 @@ HEADERS += \
     src/QuickScoresModel.h
 
 OTHER_FILES += \
+    LICENSE \
     README.md \
     harbour-lines.desktop \
     icons/*.svg \

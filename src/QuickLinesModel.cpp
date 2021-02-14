@@ -1,33 +1,34 @@
 /*
-  Copyright (C) 2015-2019 Jolla Ltd.
-  Copyright (C) 2015-2019 Slava Monich <slava.monich@jolla.com>
+  Copyright (C) 2015-2021 Jolla Ltd.
+  Copyright (C) 2015-2021 Slava Monich <slava.monich@jolla.com>
 
-  You may use this file under the terms of BSD license as follows:
+  You may use this file under the terms of the BSD license as follows:
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
   are met:
 
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the names of the copyright holders nor the names of its
-      contributors may be used to endorse or promote products derived
-      from this software without specific prior written permission.
+    1. Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright
+       notice, this list of conditions and the following disclaimer
+       in the documentation and/or other materials provided with the
+       distribution.
+    3. Neither the names of the copyright holders nor the names of its
+       contributors may be used to endorse or promote products derived
+       from this software without specific prior written permission.
 
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS
-  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include "QuickLinesModel.h"
@@ -103,27 +104,36 @@ int QuickLinesModel::rowCount(const QModelIndex&) const
 
 QVariant QuickLinesModel::data(const QModelIndex& aIndex, int aRole) const
 {
+    // Pre-allocate state strings
+    static const QString START_MOVE("START_MOVE");
+    static const QString END_MOVE("END_MOVE");
+    static const QString MOVING("MOVING");
+    static const QString SELECTED("SELECTED");
+    static const QString STATIC("STATIC");
+    static const QString EMPTY("EMPTY");
+    static const QString NONE("NONE");
+
     const LinesPoint point(pointFromIndex(aIndex));
     switch (aRole) {
     case CellColumn:
-        return QVariant(point.x);
+        return QVariant::fromValue(point.x);
     case CellRow:
-        return QVariant(point.y);
+        return QVariant::fromValue(point.y);
     case CellColor:
         if (iGame) {
             const LinesState* state = iGame->state();
             if (state) {
                 if (state->hasBallAt(point)) {
-                    return QVariant(colorAt(point));
+                    return QVariant::fromValue(colorAt(point));
                 } else if (iMoveStep >= 0) {
                     int index = iMove.indexOf(point);
                     if (index >= 0 && index <= iMoveStep) {
-                        return QVariant(colorAt(iMove.at(0)));
+                        return QVariant::fromValue(colorAt(iMove.at(0)));
                     }
                 }
             }
         }
-        return QVariant(QString());
+        return QVariant::fromValue(QString());
     case CellState:
         if (iGame) {
             const LinesState* state = iGame->state();
@@ -131,24 +141,24 @@ QVariant QuickLinesModel::data(const QModelIndex& aIndex, int aRole) const
                 int index = iMove.indexOf(point);
                 if (index >= 0 && index <= iMoveStep) {
                     if (index == 0) {
-                        return QVariant(QString("START_MOVE"));
+                        return QVariant::fromValue(START_MOVE);
                     } else if (index == (iMove.size()-1)) {
-                        return QVariant(QString("END_MOVE"));
+                        return QVariant::fromValue(END_MOVE);
                     } else {
-                        return QVariant(QString("MOVING"));
+                        return QVariant::fromValue(MOVING);
                     }
                 }
                 if (state->hasBallAt(point)) {
                     if (state->selection().equal(point)) {
-                        return QVariant(QString("SELECTED"));
+                        return QVariant::fromValue(SELECTED);
                     } else {
-                        return QVariant(QString("STATIC"));
+                        return QVariant::fromValue(STATIC);
                     }
                 }
-                return QVariant(QString("EMPTY"));
+                return QVariant::fromValue(EMPTY);
             }
         }
-        return QVariant(QString("NONE"));
+        return QVariant::fromValue(NONE);
     }
     return QVariant();
 }
@@ -196,11 +206,11 @@ void QuickLinesModel::onSelectionChanged(LinesPoint aPrev, LinesPoint aCurrent)
         qPrintable(aPrev.toString()) << "->" <<
         qPrintable(aCurrent.toString()));
     if (aPrev.isValid()) {
-        QModelIndex index(indexFromPoint(aPrev));
+        const QModelIndex index(indexFromPoint(aPrev));
         Q_EMIT dataChanged(index, index);
     }
     if (aCurrent.isValid()) {
-        QModelIndex index(indexFromPoint(aCurrent));
+        const QModelIndex index(indexFromPoint(aCurrent));
         Q_EMIT dataChanged(index, index);
     }
 }
@@ -208,16 +218,16 @@ void QuickLinesModel::onSelectionChanged(LinesPoint aPrev, LinesPoint aCurrent)
 void QuickLinesModel::onMove(LinesPoints aPath)
 {
     if (iMoveStep >= 0) {
-        LinesPoint p(iMove.at(iMoveStep));
+        const LinesPoint p(iMove.at(iMoveStep));
         iMoveStep = -1;
         iMove.clear();
-        QModelIndex index(indexFromPoint(p));
+        const QModelIndex index(indexFromPoint(p));
         Q_EMIT dataChanged(index, index);
     }
     if (!aPath.isEmpty()) {
         iMove = aPath;
         iMoveStep = 0;
-        QModelIndex index(indexFromPoint(iMove.at(iMoveStep)));
+        const QModelIndex index(indexFromPoint(iMove.at(iMoveStep)));
         Q_EMIT dataChanged(index, index);
     }
 }
@@ -226,24 +236,29 @@ void QuickLinesModel::onMoveStepDone(LinesPoint aPoint)
 {
     if (iMoveStep >= 0 && iMove.at(iMoveStep).equal(aPoint)) {
         if (iMoveStep+1 < iMove.size()) {
+            // Moving the ball
             if (iGame->showBallPath()) {
+                // Show next step
                 iMoveStep++;
             } else {
+                // Jump straight to the end
                 iMoveStep = iMove.size()-1;
             }
-            QModelIndex index(indexFromPoint(iMove.at(iMoveStep)));
+            const QModelIndex index(indexFromPoint(iMove.at(iMoveStep)));
             Q_EMIT dataChanged(index, index);
         } else {
-            LinesPoints path(iMove);
+            // Arrived to the destination
+            const LinesPoints path(iMove);
             iMoveStep = -1;
             iMove.clear();
             HDEBUG("arrived at" << qPrintable(path.last().toString()));
-            LinesPoints change(iGame->moveBall(path.first(), path.last()));
+            const LinesPoints change(iGame->moveBall(path.first(), path.last()));
             const int n = path.size();
+            HDEBUG(n << "points changed");
             for (int i=0; i<n; i++) {
-                LinesPoint p(path.at(i));
+                const LinesPoint p(path.at(i));
                 if (!change.contains(p)) {
-                    QModelIndex index(indexFromPoint(p));
+                    const QModelIndex index(indexFromPoint(p));
                     Q_EMIT dataChanged(index, index);
                 }
             }
@@ -256,11 +271,11 @@ void QuickLinesModel::onMoveStepDone(LinesPoint aPoint)
 void QuickLinesModel::onStateChanged(LinesState* aPrev, LinesState* aCurrent)
 {
     if (aPrev && aCurrent) {
-        LinesPoints diff = aPrev->diff(*aCurrent);
+        const LinesPoints diff = aPrev->diff(*aCurrent);
         const int n = diff.size();
         HDEBUG(n << "cells changed");
         for (int i=0; i<n; i++) {
-            QModelIndex index(indexFromPoint(diff.at(i)));
+            const QModelIndex index(indexFromPoint(diff.at(i)));
             Q_EMIT dataChanged(index, index);
         }
     } else {
@@ -273,7 +288,7 @@ void QuickLinesModel::onClicked(LinesPoint aPoint)
 {
     if (iMoveStep >= 0 && iMoveStep+1 < iMove.size()) {
         iMoveStep = iMove.size()-1;
-        QModelIndex index(indexFromPoint(iMove.at(iMoveStep)));
+        const QModelIndex index(indexFromPoint(iMove.at(iMoveStep)));
         Q_EMIT dataChanged(index, index);
     }
 }
