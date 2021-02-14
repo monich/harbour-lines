@@ -43,6 +43,7 @@ Page {
     allowedOrientations: window.allowedOrientations
     property var game
     property var theme
+    property alias boardBackground: board.source
 
     readonly property int kModeGame: 0
     readonly property int kModeScores: 1
@@ -143,7 +144,6 @@ Page {
             game: page.game
             opacity: (_mode === kModeGame) ? 1 : 0
             visible: opacity > 0
-            source: HarbourTheme.darkOnLight ? Qt.resolvedUrl("images/board-light.svg") : Qt.resolvedUrl("../common/images/board.svg")
             Behavior on opacity { FadeAnimation {} }
             onBallBounced: if (_mode === kModeGame && !startSound.playing) bounceSound.play()
             onMoveFinished: if (_mode === kModeGame && !crashSound.playing) moveSound.play()

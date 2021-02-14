@@ -46,6 +46,7 @@ Image {
     property variant theme
     property variant game
     property real cellSize: height/Lines.Rows
+    property bool animateSelection: true
 
     signal gameOverPanelClicked()
     signal ballBounced()
@@ -70,6 +71,7 @@ Image {
             column: model.column
             color: model.color
             state: model.state
+            animateSelection: board.animateSelection
             onBallBounced: board.ballBounced()
             onMoveFinished: board.moveFinished()
         }

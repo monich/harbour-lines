@@ -40,6 +40,7 @@ MouseArea {
     property int column
     property string color
     property variant game
+    property bool animateSelection: true
     state: "EMPTY"
 
     property string _lastColor
@@ -106,9 +107,9 @@ MouseArea {
     }
 
     SequentialAnimation {
-        id: jumpAnimation
+        id: selectionAnimation
         loops: Animation.Infinite
-        running: state == "SELECTED" && Qt.application.active
+        running: animateSelection && state == "SELECTED" && Qt.application.active
         NumberAnimation {
             target: cell
             properties: "_size"

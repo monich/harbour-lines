@@ -33,15 +33,38 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import harbour.lines 1.0
-import "cover"
 
 ApplicationWindow {
     id: window
+
     allowedOrientations: Orientation.Portrait | Orientation.Landscape | Orientation.LandscapeInverted
-    initialPage: Component { PlayPage { game: linesGame;  theme: LinesTheme {} } }
-    cover: Component { CoverPage { game: linesGame } }
+
+    readonly property url boardBackground: HarbourTheme.darkOnLight ?
+        Qt.resolvedUrl("images/board-light.svg") :
+        Qt.resolvedUrl("../common/images/board.svg")
+
+    initialPage: Component {
+        PlayPage {
+            game: linesGame
+            theme: linesTheme
+            boardBackground: window.boardBackground
+        }
+    }
+
+    cover: Component {
+        CoverPage {
+            game: linesGame
+            theme: linesTheme
+            boardBackground: window.boardBackground
+        }
+    }
+
     LinesGame {
         id: linesGame
         prefs: LinesPrefs {}
+    }
+
+    LinesTheme {
+        id: linesTheme
     }
 }
