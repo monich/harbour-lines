@@ -80,5 +80,9 @@
         <source>settings-animate-movement-description</source>
         <translation>Note that you don&apos;t need to wait for the entire animation to complete, you can select the next ball right away.</translation>
     </message>
+    <message>
+        <source>settings-play-sounds-switch</source>
+        <translation>Play sounds</translation>
+    </message>
 </context>
 </TS>

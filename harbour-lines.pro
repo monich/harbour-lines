@@ -46,6 +46,7 @@ OTHER_FILES += \
     icons/*.svg \
     qml/common/*.qml \
     qml/common/images/*.svg \
+    qml/common/sounds/*.wav \
     qml/common/styles/ball/*.svg \
     qml/common/styles/shape/*.svg \
     qml/sailfish/*.qml \

@@ -1,33 +1,34 @@
 /*
-  Copyright (C) 2015-2020 Jolla Ltd.
-  Copyright (C) 2015-2020 Slava Monich <slava.monich@jolla.com>
+  Copyright (C) 2015-2021 Jolla Ltd.
+  Copyright (C) 2015-2021 Slava Monich <slava.monich@jolla.com>
 
-  You may use this file under the terms of BSD license as follows:
+  You may use this file under the terms of the BSD license as follows:
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
   are met:
 
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the names of the copyright holders nor the names of its
-      contributors may be used to endorse or promote products derived
-      from this software without specific prior written permission.
+    1. Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright
+       notice, this list of conditions and the following disclaimer
+       in the documentation and/or other materials provided with the
+       distribution.
+    3. Neither the names of the copyright holders nor the names of its
+       contributors may be used to endorse or promote products derived
+       from this software without specific prior written permission.
 
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS
-  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
-  THE POSSIBILITY OF SUCH DAMAGE.
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 import QtQuick 2.0
@@ -40,27 +41,81 @@ import "../harbour"
 Page {
     id: page
     allowedOrientations: window.allowedOrientations
-    property variant game
-    property variant theme
+    property var game
+    property var theme
 
     readonly property int kModeGame: 0
     readonly property int kModeScores: 1
     readonly property int kModeSettings: 2
     property int _mode: kModeGame
 
-    property bool _portrait: page.orientation === Orientation.Portrait
-    property string _highScore: (game && game.highScore) ? game.highScore : ""
+    readonly property bool _sounds: game && game.prefs && game.prefs.playSounds
+    readonly property string _highScore: (game && game.highScore) ? game.highScore : ""
     property int _score: game ? game.score : 0
     property string _ballStyle: (game && game.prefs) ? game.prefs.ballStyle : "ball"
-    property real cellSize: _portrait ?
+    property real cellSize: isPortrait ?
         Math.min((width - 2*theme.paddingLarge)/Lines.Columns,
                  (height - 4*theme.paddingLarge)/(Lines.Rows+2)) :
         Math.min((height - 2*theme.paddingLarge)/Lines.Rows,
                  (width - 4*theme.paddingLarge)/(Lines.Columns+2))
 
+    Sound {
+        id: bounceSound
+        active: _sounds
+        file: "bounce.wav"
+    }
+
+    Sound {
+        id: moveSound
+        active: _sounds
+        file: "move.wav"
+    }
+
+    Sound {
+        id: oopsSound
+        active: _sounds
+        file: "oops.wav"
+    }
+
+    Sound {
+        id: crashSound
+        active: _sounds
+        file: "crash.wav"
+    }
+
+    Sound {
+        id: successSound
+        active: _sounds
+        file: "success.wav"
+    }
+
+    // This one plays at startup and when sounds get enabled
+    Sound {
+        id: startSound
+        active: _sounds
+        autoplay: true
+        file: "start.wav"
+    }
+
     NextBallsModel {
         id: nextBallsModel
         game: page.game
+    }
+
+    Connections {
+        // No need to handle these signals if sounds are disabled
+        target: _sounds ? game : null
+        onOops: oopsSound.play()
+        onScoreChanged: {
+            if (scoreItem.displayedScore < _score) {
+                crashSound.play()
+            }
+        }
+        onOverChanged: {
+            if (game.over && game.newRecord) {
+                successSound.play()
+            }
+        }
     }
 
     Component.onCompleted: scoreItem.displayedScore = _score
@@ -71,7 +126,10 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: qsTr("menu-new-game")
-                onClicked: game.restart()
+                onClicked: {
+                    _mode = kModeGame
+                    game.restart()
+                }
             }
         }
 
@@ -87,15 +145,17 @@ Page {
             visible: opacity > 0
             source: HarbourTheme.darkOnLight ? Qt.resolvedUrl("images/board-light.svg") : Qt.resolvedUrl("../common/images/board.svg")
             Behavior on opacity { FadeAnimation {} }
+            onBallBounced: if (_mode === kModeGame && !startSound.playing) bounceSound.play()
+            onMoveFinished: if (_mode === kModeGame && !crashSound.playing) moveSound.play()
         }
 
         GridView {
             id: nextBalls
-            width: cellSize * (_portrait ? nextBallsModel.count : 1)
-            height: cellSize * (_portrait ? 1 : nextBallsModel.count)
+            width: cellSize * (isPortrait ? nextBallsModel.count : 1)
+            height: cellSize * (isPortrait ? 1 : nextBallsModel.count)
             anchors {
-                leftMargin: _portrait ? 0 : theme.paddingLarge
-                bottomMargin: _portrait ? theme.paddingLarge : 0
+                leftMargin: isPortrait ? 0 : theme.paddingLarge
+                bottomMargin: isPortrait ? theme.paddingLarge : 0
             }
             opacity: game && game.prefs && game.prefs.showNextBalls ? 1 : 0
             cellWidth: cellSize
@@ -126,7 +186,7 @@ Page {
             text: displayedScore
             anchors {
                 bottomMargin: Theme.paddingLarge
-                leftMargin: _portrait ? 0 : Theme.paddingLarge
+                leftMargin: isPortrait ? 0 : Theme.paddingLarge
             }
             transform: HarbourTextFlip {
                 id: scoreItemFlip
@@ -135,9 +195,11 @@ Page {
             }
             property int displayedScore: 0
             readonly property int realScore: _score
-            onRealScoreChanged: if (displayedScore > _score) scoreItemFlip.flipTo(_score) // Flip down
+            // Initial flip or flip down
+            Component.onCompleted: scoreItemFlip.flipTo(_score)
+            onRealScoreChanged: if (displayedScore > _score) scoreItemFlip.flipTo(_score)
             Timer {
-                running: scoreItem.displayedScore < _score // Count up
+                running: scoreItem.displayedScore < _score && !scoreItemFlip.running // Count up
                 interval: 50
                 repeat: true
                 onTriggered: if (scoreItem.displayedScore < _score) scoreItem.displayedScore++
@@ -182,7 +244,7 @@ Page {
             horizontalAlignment: Text.AlignRight
             anchors {
                 bottomMargin: theme.paddingLarge
-                rightMargin: _portrait ? 0 : theme.paddingLarge
+                rightMargin: isPortrait ? 0 : theme.paddingLarge
             }
             transform: HarbourTextFlip {
                 enabled: highScoreItem.text !== ""
@@ -247,7 +309,7 @@ Page {
         states: [
             State {
                 name: "PORTRAIT"
-                when:  _portrait
+                when:  isPortrait
                 AnchorChanges {
                     target: scoreLabel
                     anchors {
@@ -290,7 +352,7 @@ Page {
             },
             State {
                 name: "LANDSCAPE"
-                when: !_portrait
+                when: !isPortrait
                 AnchorChanges {
                     target: scoreLabel
                     anchors {

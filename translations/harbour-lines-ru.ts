@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>message-new-record</source>
-        <translation>Поздравляем!</translation>
+        <translation>Ура!</translation>
     </message>
 </context>
 <context>
@@ -78,7 +78,11 @@
     </message>
     <message>
         <source>settings-animate-movement-description</source>
-        <translation>Забавно наблюдать, как шарики попадают с одного поля на другое, но это немного замедляет игру.</translation>
+        <translation>Забавно наблюдать, как шарики перескакивают с одного поля на другое, хотя это слегка замедляет игру.</translation>
+    </message>
+    <message>
+        <source>settings-play-sounds-switch</source>
+        <translation>Звуковые эффекты</translation>
     </message>
 </context>
 </TS>

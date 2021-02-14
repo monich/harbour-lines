@@ -80,5 +80,9 @@
         <source>settings-animate-movement-description</source>
         <translation>Let op: je hoeft niet te wachten tot de volledige animatie voltooid is, je kan de volgende bal meteen selecteren.</translation>
     </message>
+    <message>
+        <source>settings-play-sounds-switch</source>
+        <translation type="unfinished">Speel geluiden</translation>
+    </message>
 </context>
 </TS>

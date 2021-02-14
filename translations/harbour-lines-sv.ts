@@ -80,5 +80,9 @@
         <source>settings-animate-movement-description</source>
         <translation>Notera att du inte behöver vänta på att animeringen skall slutföras, du kan välja nästa boll direkt.</translation>
     </message>
+    <message>
+        <source>settings-play-sounds-switch</source>
+        <translation type="unfinished">Spela upp ljud</translation>
+    </message>
 </context>
 </TS>
