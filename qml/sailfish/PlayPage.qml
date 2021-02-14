@@ -52,6 +52,7 @@ Page {
 
     readonly property bool _sounds: game && game.prefs && game.prefs.playSounds
     readonly property string _highScore: (game && game.highScore) ? game.highScore : ""
+    readonly property bool _newRecord: game && game.newRecord
     property int _score: game ? game.score : 0
     property string _ballStyle: (game && game.prefs) ? game.prefs.ballStyle : "ball"
     property real cellSize: isPortrait ?
@@ -172,11 +173,75 @@ Page {
             Behavior on opacity { FadeAnimation {} }
         }
 
+        Item {
+            id: iconContainer
+
+            readonly property real horizontalMargins: isPortrait ? Math.max(scoreItem.width, highScoreItem.width) : theme.paddingLarge
+            anchors {
+                leftMargin: horizontalMargins
+                rightMargin: _highScore ? horizontalMargins : 0
+            }
+            opacity: isPortrait ? 1 : (1 - nextBalls.opacity)
+            visible: opacity > 0
+
+            Image {
+                id: icon
+
+                // Choose the maximum available size but no more than Theme.itemSizeLarge
+                readonly property real maxSize: Theme.itemSizeLarge
+                readonly property real maxWidth: Math.min(parent.width, maxSize)
+                readonly property real maxHeight: Math.min(parent.height, maxSize)
+                readonly property real widthAtMaxHeight: implicitHeight ? (maxHeight * implicitWidth / implicitHeight) : 0
+
+                anchors.bottom: parent.bottom
+                width: Math.min(widthAtMaxHeight, maxWidth)
+                height: implicitWidth ? (width * implicitHeight / implicitWidth) : 0
+                source: Qt.resolvedUrl("images/" + (_newRecord ? "king.png" : "pretender.png"))
+                smooth: true
+                layer.enabled: iconPressArea.pressed
+                layer.effect: HarbourPressEffect { source: icon }
+            }
+
+            MouseArea {
+                id: iconPressArea
+
+                anchors {
+                    fill: icon
+                    margins: -theme.paddingLarge
+                }
+                onClicked: {
+                    _mode = kModeScores
+                    jumpAnimation.start()
+                    if (!startSound.playing) {
+                        startSound.play()
+                    }
+                }
+            }
+
+            SequentialAnimation {
+                id: jumpAnimation
+
+                alwaysRunToEnd: true
+                NumberAnimation {
+                    target: icon
+                    properties: "scale"
+                    duration: 75
+                    to: 1.2
+                }
+                NumberAnimation {
+                    target: icon
+                    properties: "scale"
+                    duration: 75
+                    to: 1
+                }
+            }
+        }
+
         Label {
             id: scoreLabel
             anchors.left: scoreItem.left
             text: qsTr("label-score")
-            font.pixelSize: Theme.fontSizeExtraSmall
+            font.pixelSize: theme.fontSizeExtraSmall
             color: scoreItem.color
             opacity: 0.4
         }
@@ -185,8 +250,8 @@ Page {
             id: scoreItem
             text: displayedScore
             anchors {
-                bottomMargin: Theme.paddingLarge
-                leftMargin: isPortrait ? 0 : Theme.paddingLarge
+                bottomMargin: theme.paddingLarge
+                leftMargin: isPortrait ? 0 : theme.paddingLarge
             }
             transform: HarbourTextFlip {
                 id: scoreItemFlip
@@ -227,7 +292,7 @@ Page {
             id: highScoreLabel
             anchors.right: highScoreItem.right
             text: qsTr("label-high-score")
-            font.pixelSize: Theme.fontSizeExtraSmall
+            font.pixelSize: theme.fontSizeExtraSmall
             color: highScoreItem.color
             visible: opacity > 0
             opacity: _highScore ? 0.4 : 0
@@ -343,6 +408,23 @@ Page {
                     }
                 }
                 AnchorChanges {
+                    target: iconContainer
+                    anchors {
+                        top: parent.top
+                        left: board.left
+                        right: board.right
+                        bottom: scoreItem.baseline
+                    }
+                }
+                AnchorChanges {
+                    target: icon
+                    anchors {
+                        horizontalCenter: _highScore ? parent.horizontalCenter : undefined
+                        left: undefined
+                        right: _highScore ? undefined : parent.right
+                    }
+                }
+                AnchorChanges {
                     target: nextBalls
                     anchors {
                         left: board.left
@@ -383,6 +465,23 @@ Page {
                         left: undefined
                         right: parent.right
                         bottom: undefined
+                    }
+                }
+                AnchorChanges {
+                    target: iconContainer
+                    anchors {
+                        top: scoreLabel.bottom
+                        left: parent.left
+                        bottom: board.bottom
+                        right: board.left
+                    }
+                }
+                AnchorChanges {
+                    target: icon
+                    anchors {
+                        horizontalCenter: undefined
+                        left: parent.left
+                        right: undefined
                     }
                 }
                 AnchorChanges {

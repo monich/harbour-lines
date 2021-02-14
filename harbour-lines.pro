@@ -82,6 +82,7 @@ SOURCES += \
     $${HARBOUR_LIB_SRC}/HarbourTheme.cpp
 
 HARBOUR_QML_COMPONENTS = \
+    $${HARBOUR_LIB_QML}/HarbourPressEffect.qml \
     $${HARBOUR_LIB_QML}/HarbourTextFlip.qml
 
 OTHER_FILES += $${HARBOUR_QML_COMPONENTS}
