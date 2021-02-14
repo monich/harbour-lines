@@ -5,3 +5,7 @@ Name=Lines
 Name[ru]=Шарики
 Icon=harbour-lines
 Exec=harbour-lines
+
+[X-HarbourBackup]
+BackupPathList = .local/share/harbour-lines/
+BackupConfigList = /apps/harbour-lines/
