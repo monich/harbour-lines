@@ -173,70 +173,6 @@ Page {
             Behavior on opacity { FadeAnimation {} }
         }
 
-        Item {
-            id: iconContainer
-
-            readonly property real horizontalMargins: isPortrait ? Math.max(scoreItem.width, highScoreItem.width) : theme.paddingLarge
-            anchors {
-                leftMargin: horizontalMargins
-                rightMargin: _highScore ? horizontalMargins : 0
-            }
-            opacity: isPortrait ? 1 : (1 - nextBalls.opacity)
-            visible: opacity > 0
-
-            Image {
-                id: icon
-
-                // Choose the maximum available size but no more than Theme.itemSizeLarge
-                readonly property real maxSize: Theme.itemSizeLarge
-                readonly property real maxWidth: Math.min(parent.width, maxSize)
-                readonly property real maxHeight: Math.min(parent.height, maxSize)
-                readonly property real widthAtMaxHeight: implicitHeight ? (maxHeight * implicitWidth / implicitHeight) : 0
-
-                anchors.bottom: parent.bottom
-                width: Math.min(widthAtMaxHeight, maxWidth)
-                height: implicitWidth ? (width * implicitHeight / implicitWidth) : 0
-                source: Qt.resolvedUrl("images/" + (_newRecord ? "king.png" : "pretender.png"))
-                smooth: true
-                layer.enabled: iconPressArea.pressed
-                layer.effect: HarbourPressEffect { source: icon }
-            }
-
-            MouseArea {
-                id: iconPressArea
-
-                anchors {
-                    fill: icon
-                    margins: -theme.paddingLarge
-                }
-                onClicked: {
-                    _mode = kModeScores
-                    jumpAnimation.start()
-                    if (!startSound.playing) {
-                        startSound.play()
-                    }
-                }
-            }
-
-            SequentialAnimation {
-                id: jumpAnimation
-
-                alwaysRunToEnd: true
-                NumberAnimation {
-                    target: icon
-                    properties: "scale"
-                    duration: 75
-                    to: 1.2
-                }
-                NumberAnimation {
-                    target: icon
-                    properties: "scale"
-                    duration: 75
-                    to: 1
-                }
-            }
-        }
-
         Label {
             id: scoreLabel
             anchors.left: scoreItem.left
@@ -327,6 +263,8 @@ Page {
             enabled: game.over
         }
 
+        // Other mouse areas must go after PulleyAnimationHint which fills the entire page
+
         SettingsPanel {
             prefs: game.prefs
             anchors.fill: board
@@ -341,6 +279,73 @@ Page {
             visible: opacity > 0
             opacity: (_mode === kModeScores) ? 1 : 0
             Behavior on opacity { FadeAnimation {} }
+        }
+
+        Item {
+            id: iconContainer
+
+            readonly property real horizontalMargins: isPortrait ? Math.max(scoreItem.width, highScoreItem.width) : theme.paddingLarge
+            anchors {
+                leftMargin: horizontalMargins
+                rightMargin: _highScore ? horizontalMargins : 0
+            }
+            opacity: isPortrait ? 1 : (1 - nextBalls.opacity)
+            visible: opacity > 0
+
+            Image {
+                id: icon
+
+                // Choose the maximum available size but no more than Theme.itemSizeLarge
+                readonly property real maxSize: Theme.itemSizeLarge
+                readonly property real maxWidth: Math.min(parent.width, maxSize)
+                readonly property real maxHeight: Math.min(parent.height, maxSize)
+                readonly property real widthAtMaxHeight: implicitHeight ? (maxHeight * implicitWidth / implicitHeight) : 0
+
+                anchors.bottom: parent.bottom
+                width: Math.min(widthAtMaxHeight, maxWidth)
+                height: implicitWidth ? (width * implicitHeight / implicitWidth) : 0
+                source: Qt.resolvedUrl("images/" + (_newRecord ? "king.png" : "pretender.png"))
+                smooth: true
+                layer.enabled: iconPressArea.pressed
+                layer.effect: HarbourPressEffect { source: icon }
+            }
+
+            MouseArea {
+                id: iconPressArea
+
+                anchors {
+                    fill: icon
+                    margins: -theme.paddingLarge
+                }
+                onClicked: {
+                    // Don't show empty score table
+                    if (_highScore > 0) {
+                        _mode = (_mode === kModeScores) ? kModeGame : kModeScores
+                    }
+                    jumpAnimation.start()
+                    if (!startSound.playing) {
+                        startSound.play()
+                    }
+                }
+            }
+
+            SequentialAnimation {
+                id: jumpAnimation
+
+                alwaysRunToEnd: true
+                NumberAnimation {
+                    target: icon
+                    properties: "scale"
+                    duration: 75
+                    to: 1.2
+                }
+                NumberAnimation {
+                    target: icon
+                    properties: "scale"
+                    duration: 75
+                    to: 1
+                }
+            }
         }
 
         HighlightableMouseArea {
