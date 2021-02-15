@@ -1,6 +1,6 @@
 Name:       harbour-lines
 Summary:    Lines game
-Version:    1.0.6
+Version:    1.0.7
 Release:    1
 Group:      Amusements/Games
 License:    BSD
@@ -49,6 +49,13 @@ desktop-file-install --delete-original \
 %exclude %{_datadir}/%{name}/qml/meego
 
 %changelog
+* Sun Feb 14 2021 Slava Monich <slava.monich@jolla.com> 1.0.7
+- Added sounds
+- Freshened up the UI
+- Redesigned cover page
+- Updated Russian translation
+- Integration with harbour-backup
+
 * Sun Mar 1 2020 Slava Monich <slava.monich@jolla.com> 1.0.6
 - Swedish translation
 
