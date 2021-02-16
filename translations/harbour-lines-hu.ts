@@ -63,7 +63,7 @@ pontszám</translation>
     </message>
     <message>
         <source>settings-style-shape</source>
-        <translation>Színes körök</translation>
+        <translation>Színes alakzatok</translation>
     </message>
     <message>
         <source>settings-show-next-switch</source>
@@ -79,7 +79,7 @@ pontszám</translation>
     </message>
     <message>
         <source>settings-animate-movement-description</source>
-        <translation>Nem szükséges megvárnod, míg a teljes animáció lejátszódik, válszthatod rögtön a következő labdát.</translation>
+        <translation>Nem szükséges megvárnod, míg a teljes animáció lejátszódik, választhatod rögtön a következő labdát.</translation>
     </message>
     <message>
         <source>settings-play-sounds-switch</source>
