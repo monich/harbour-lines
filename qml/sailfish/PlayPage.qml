@@ -227,6 +227,7 @@ Page {
         Label {
             id: highScoreLabel
             anchors.right: highScoreItem.right
+            horizontalAlignment: Text.AlignRight
             text: qsTr("label-high-score")
             font.pixelSize: theme.fontSizeExtraSmall
             color: highScoreItem.color

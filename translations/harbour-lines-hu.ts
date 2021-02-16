@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1">
+<TS version="2.1" language="nl">
 <context>
     <name>Board</name>
     <message>
@@ -20,7 +20,7 @@
     </message>
     <message>
         <source>new-game-question</source>
-        <translation>Új játékot kezdesz??</translation>
+        <translation>Új játékot kezdesz?</translation>
     </message>
     <message>
         <source>new-game-accept</source>
@@ -36,7 +36,8 @@
     </message>
     <message>
         <source>label-high-score</source>
-        <translation>Legmagasabb pontszám</translation>
+        <translation>Legmagasabb
+pontszám</translation>
     </message>
 </context>
 <context>
