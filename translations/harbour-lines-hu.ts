@@ -62,7 +62,7 @@
     </message>
     <message>
         <source>settings-style-shape</source>
-        <translation>Színes körök</translation>
+        <translation>Színes alakzatok</translation>
     </message>
     <message>
         <source>settings-show-next-switch</source>
