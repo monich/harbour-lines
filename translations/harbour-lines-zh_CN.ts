@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="zh_CN">>
+<context>
+    <name>Board</name>
+    <message>
+        <source>message-game-over</source>
+        <translation>游戏结束r</translation>
+    </message>
+    <message>
+        <source>message-new-record</source>
+        <translation>恭喜！</translation>
+    </message>
+</context>
+<context>
+    <name>PlayPage</name>
+    <message>
+        <source>menu-new-game</source>
+        <translation>新游戏</translation>
+    </message>
+    <message>
+        <source>new-game-question</source>
+        <translation>开始新游戏？</translation>
+    </message>
+    <message>
+        <source>new-game-accept</source>
+        <translation>是</translation>
+    </message>
+    <message>
+        <source>new-game-reject</source>
+        <translation>否</translation>
+    </message>
+    <message>
+        <source>label-score</source>
+        <translation>得分</translation>
+    </message>
+    <message>
+        <source>label-high-score</source>
+        <translation>最高得分</translation>
+    </message>
+</context>
+<context>
+    <name>ScoresPanel</name>
+    <message>
+        <source>scores-title</source>
+        <translation>得分</translation>
+    </message>
+    <message>
+        <source>scores-current-score</source>
+        <translation>当前得分</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsPanel</name>
+    <message>
+        <source>settings-style</source>
+        <translation>风格</translation>
+    </message>
+    <message>
+        <source>settings-style-ball</source>
+        <translation>彩色球</translation>
+    </message>
+    <message>
+        <source>settings-style-shape</source>
+        <translation>彩色形体</translation>
+    </message>
+    <message>
+        <source>settings-show-next-switch</source>
+        <translation>显示下个形体</translation>
+    </message>
+    <message>
+        <source>settings-show-next-description</source>
+        <translation>开启之后可能会使游戏变得简单，但如果你事先不知道接下来会出现的彩色形状，得分会更高。</translation>
+    </message>
+    <message>
+        <source>settings-animate-movement-switch</source>
+        <translation>球体运动动画/translation>
+    </message>
+    <message>
+        <source>settings-animate-movement-description</source>
+        <translation>请注意你并不需要等待整个动画结速，你可以立即选择下一个形体。</translation>
+    </message>
+    <message>
+        <source>settings-play-sounds-switch</source>
+        <translation>播放声音</translation>
+    </message>
+</context>
+</TS>
