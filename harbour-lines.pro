@@ -109,4 +109,5 @@ TRANSLATIONS += \
     translations/harbour-lines-hu.ts \
     translations/harbour-lines-nl.ts \
     translations/harbour-lines-ru.ts \
-    translations/harbour-lines-sv.ts
+    translations/harbour-lines-sv.ts \
+    translations/harbour-lines-zh_CN.ts
