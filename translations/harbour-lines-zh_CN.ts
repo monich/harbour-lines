@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">>
+<TS version="2.1" language="zh_CN">
 <context>
     <name>Board</name>
     <message>
         <source>message-game-over</source>
-        <translation>游戏结束r</translation>
+        <translation>游戏结束</translation>
     </message>
     <message>
         <source>message-new-record</source>
@@ -74,7 +74,7 @@
     </message>
     <message>
         <source>settings-animate-movement-switch</source>
-        <translation>球体运动动画/translation>
+        <translation>球体运动动画</translation>
     </message>
     <message>
         <source>settings-animate-movement-description</source>
