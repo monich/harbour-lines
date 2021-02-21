@@ -1,6 +1,6 @@
 Name:       harbour-lines
 Summary:    Lines game
-Version:    1.0.8
+Version:    1.0.9
 Release:    1
 Group:      Amusements/Games
 License:    BSD
@@ -23,7 +23,7 @@ BuildRequires: qt5-qttools-linguist
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 
 %description
-Lines game for Sailfish
+Lines game for Sailfish OS
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -49,6 +49,9 @@ desktop-file-install --delete-original \
 %exclude %{_datadir}/%{name}/qml/meego
 
 %changelog
+* Sun Feb 21 2021 Slava Monich <slava.monich@jolla.com> 1.0.9
+- Chinese translation
+
 * Tue Feb 16 2021 Slava Monich <slava.monich@jolla.com> 1.0.8
 - Hungarian translation
 - Minor UI tweaks
