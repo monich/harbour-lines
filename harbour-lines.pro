@@ -98,9 +98,10 @@ for(s, ICON_SIZES) {
 
 # to disable building translations every time, comment out the
 # following CONFIG line
-CONFIG += sailfishapp_i18n
+CONFIG += sailfishapp_i18n sailfishapp_i18n_unfinished
 TRANSLATIONS += \
     translations/harbour-lines.ts \
+    translations/harbour-lines-fi.ts \
     translations/harbour-lines-hu.ts \
     translations/harbour-lines-nl.ts \
     translations/harbour-lines-ru.ts \
