@@ -1,6 +1,6 @@
 /*
   Copyright (C) 2015-2026 Slava Monich <slava@monich.com>
-  Copyright (C) 2015-2019 Jolla Ltd.
+  Copyright (C) 2015-2020 Jolla Ltd.
 
   You may use this file under the terms of the BSD license as follows:
 
@@ -36,44 +36,48 @@
   are those of the authors and should not be interpreted as representing
 */
 
-import QtQuick 2.0
-import Sailfish.Silica 1.0
-import harbour.lines 1.0
+import QtQuick 1.1
 
-ApplicationWindow {
-    id: appWindow
+import "../common"
 
-    allowedOrientations: Orientation.Portrait | Orientation.Landscape | Orientation.LandscapeInverted
+HighlightableMouseArea {
+    id: button
 
-    readonly property bool _darkOnLight: ('colorScheme' in Theme) && Theme.colorScheme === 1 // Theme.DarkOnLight
-    readonly property url _boardBackground: _darkOnLight ?
-        Qt.resolvedUrl("images/board-light.svg") :
-        Qt.resolvedUrl("../common/images/board.svg")
+    property bool ok
 
-    initialPage: Component {
-        PlayPage {
-            allowedOrientations: appWindow.allowedOrientations
-            game: linesGame
-            theme: linesTheme
-            boardBackground: _boardBackground
-        }
+    signal buttonClicked()
+
+    Component.onCompleted: {
+        settingsOpacityBehavior.animation = theme.opacityAnimation.createObject(settingsImage)
+        okOpacityBehavior.animation = theme.opacityAnimation.createObject(okImage)
     }
 
-    cover: Component {
-        CoverPage {
-            game: linesGame
-            theme: linesTheme
-            boardBackground: _boardBackground
-        }
+    Image {
+        id: settingsImage
+
+        anchors.fill: parent
+        source: Qt.resolvedUrl("images/settings-normal.svg")
+        sourceSize.width: width
+        sourceSize.height: height
+        visible: opacity > 0
+        opacity: ok ? 0 : 1
+        Behavior on opacity { id: settingsOpacityBehavior }
     }
 
-    LinesGame {
-        id: linesGame
+    Image {
+        id: okImage
 
-        prefs: LinesPrefs {}
+        anchors.fill: parent;
+        source: Qt.resolvedUrl("images/settings-ok.svg")
+        sourceSize.width: width
+        sourceSize.height: height
+        visible: opacity > 0
+        opacity: ok ? 1 : 0
+        Behavior on opacity { id: okOpacityBehavior }
     }
 
-    LinesTheme {
-        id: linesTheme
+    onClicked: {
+        mouse.accepted = true
+        button.buttonClicked()
     }
 }
