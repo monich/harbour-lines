@@ -1,4 +1,4 @@
 build
-harbour-lines.pro.user
-meego-lines.pro.user
+harbour-lines.pro.user*
+meego-lines.pro.user*
 translations/*.qm
