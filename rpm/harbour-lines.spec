@@ -2,14 +2,13 @@ Name:       harbour-lines
 Summary:    Lines game
 Version:    1.0.9
 Release:    1
-Group:      Amusements/Games
+Group:      Games/Puzzles
 License:    BSD
 URL:        http://github.com/monich/harbour-lines
 Source0:    %{name}-%{version}.tar.bz2
 
 Requires:      sailfishsilica-qt5 >= 0.10.9
 Requires:      qt5-qtsvg-plugin-imageformat-svg
-BuildRequires: pkgconfig(glib-2.0) >= 2.32
 BuildRequires: pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires: pkgconfig(Qt5Quick)
 BuildRequires: pkgconfig(Qt5Core)
@@ -20,7 +19,6 @@ BuildRequires: qt5-qttools-linguist
 
 %{!?qtc_qmake5:%define qtc_qmake5 %qmake5}
 %{!?qtc_make:%define qtc_make make}
-%{?qtc_builddir:%define _builddir %qtc_builddir}
 
 %description
 Lines game for Sailfish OS
@@ -33,7 +31,6 @@ Lines game for Sailfish OS
 %qtc_make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
 %qmake5_install
 
 desktop-file-install --delete-original \

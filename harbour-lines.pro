@@ -1,7 +1,7 @@
 TARGET = harbour-lines
 CONFIG += link_pkgconfig
 CONFIG += sailfishapp
-PKGCONFIG += glib-2.0 mlite5
+PKGCONFIG += mlite5
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-psabi
 QT += qml quick
 LIBS += -ldl
